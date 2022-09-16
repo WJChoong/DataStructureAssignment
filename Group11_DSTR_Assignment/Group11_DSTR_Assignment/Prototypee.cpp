@@ -4,7 +4,7 @@
 #include<ctime> //Get Current Date and Time 
 using namespace std;
 
-// hello
+
 struct Station {
 
 	int StationID;
@@ -20,6 +20,8 @@ struct Station {
 	string NearbySightseeingSpots;
 
 	Station* nextAdd;
+	Station* prevAdd;
+
 }*stationHead, * stationCurrent, * stationTail;
 
 
@@ -37,6 +39,8 @@ struct Ticket {
 	string CustomerIcOrPassport;
 
 	Ticket* nextAdd;
+	Ticket* prevAdd;
+
 }*ticketHead, * ticketCurrent;
 
 void drawopening() {
@@ -76,29 +80,36 @@ Station* createStationNode(int StationID, string StationName, string PreviousSta
 	StationNode->NearbySightseeingSpots = NearbySightseeingSpots;
 
 	StationNode->nextAdd = NULL;
+	StationNode->prevAdd = NULL;
 
 	return StationNode;
 }
 
 
-//Insert to the End of the list
-void insertToTheEndList(Station* StationNode)
+//Insert to the Front of the list
+void insertToTheFrontList(Station* StationNode)
 {
 	// If the list still empty
-	if (stationHead == NULL)
+	if (stationHead == NULL && stationTail == NULL)
 	{
 		stationHead = StationNode;
 	}
 
-	// If the list not empty
+	//If the list only has 1 item
+	else if (stationTail == NULL)
+	{
+		stationTail = stationHead;
+		stationTail->prevAdd = StationNode;
+		StationNode->nextAdd = stationTail;
+		stationHead = StationNode;
+	}
+
+	// If the list has more that 2 items
 	else
 	{
-		stationCurrent = stationHead;	
-		while (stationCurrent->nextAdd != NULL)
-		{
-			stationCurrent = stationCurrent->nextAdd;
-		}
-		stationCurrent->nextAdd = StationNode;
+		stationHead->prevAdd = StationNode;
+		StationNode->nextAdd = stationHead;
+		stationHead = StationNode;
 	}
 }
 
@@ -127,19 +138,12 @@ void listAllPossibleArrivalStation(int route, int departure) {
 			}
 			break;
 
-		case 2://Can be change to doubly linked list
-			for (int i = 1; i <= 8; i++)
+		case 2:
+			for (int i = 1; i < departure; i++)
 			{
-				if (stationCurrent->StationID < departure)
-				{
-					cout << stationCurrent->StationID << ") ";
-					cout << stationCurrent->StationName << endl;
-					stationCurrent = stationCurrent->nextAdd;
-				}
-				else
-				{
-					stationCurrent = stationCurrent->nextAdd;
-				}
+				cout << stationCurrent->StationID << ") ";
+				cout << stationCurrent->StationName << endl;
+				stationCurrent = stationCurrent->nextAdd;
 			}
 	}
 }
@@ -211,7 +215,7 @@ int isValidDate(int DepartureYear, int DepartureMonth, int DepartureDay)
 		{
 			return 4;
 		}
-		
+
 		return 5;
 	}
 
@@ -220,31 +224,30 @@ int isValidDate(int DepartureYear, int DepartureMonth, int DepartureDay)
 
 
 //List all possible Departure Time
-void listAllPossibleDepartureTime(int route, int departure) //int todaydate)
+double listAllPossibleDepartureTime(int route, int departure) //int todaydate)
 {
-	if (route == 1)
+	// calculate possible minutes
+	double possibleMinutes = 0;
+	switch (route)
 	{
-		int possibleMinutes[2] = { 0,0 };
-		// list all possible minutes
-		stationCurrent = stationHead;
-		for (int i = 1; i <= departure; i++)
+	case 1:
+		stationCurrent = stationHead->nextAdd;
+		for (int i = 1; i < departure; i++)
 		{
-			cout << possibleMinutes[0];
-			cout << stationCurrent->TimeBetweenPreviousStation;
-			possibleMinutes[0] = possibleMinutes[0] + stationCurrent->TimeBetweenPreviousStation;
-			stationCurrent->nextAdd;
+			possibleMinutes = possibleMinutes + stationCurrent->TimeBetweenPreviousStation;
+			stationCurrent = stationCurrent->nextAdd;
 		}
-		possibleMinutes[1] = possibleMinutes[0] + 30;
-
-		cout << "1)" << possibleMinutes[0] << "2)" << possibleMinutes[1] << endl;
-
-
+		break;
+	case 2:
+		stationCurrent = stationTail->prevAdd;
+		for (int i = 8; i > departure; i--)
+		{
+			possibleMinutes = possibleMinutes + stationCurrent->TimeBetweenNextStation;
+			stationCurrent = stationCurrent->prevAdd;
+		}
 	}
-	else
-	{
+	return possibleMinutes;
 
-	}
-	stationCurrent = stationHead;
 }
 
 
@@ -311,57 +314,137 @@ int main()
 
 		if (role == 1)
 		{
-			insertToTheEndList(StationNode1);
-			insertToTheEndList(StationNode2);
-			insertToTheEndList(StationNode3);
-			insertToTheEndList(StationNode4);
-			insertToTheEndList(StationNode5);
-			insertToTheEndList(StationNode6);
-			insertToTheEndList(StationNode7);
-			insertToTheEndList(StationNode8);
-
+			int mainmenu = 0;
+			insertToTheFrontList(StationNode8);
+			insertToTheFrontList(StationNode7);
+			insertToTheFrontList(StationNode6);
+			insertToTheFrontList(StationNode5);
+			insertToTheFrontList(StationNode4);
+			insertToTheFrontList(StationNode3);
+			insertToTheFrontList(StationNode2);
+			insertToTheFrontList(StationNode1);
 
 			int route;
-			cout << "1) Titiwangsa -> Chan Sow Lin" << endl;
-			cout << "2) Chan Sow Lin -> Titiwangsa" << endl;
-			cout << "Choose your route: " << endl;
-			cin >> route;
+			while (mainmenu == 0)
+			{
+				cout << "1) Titiwangsa -> Chan Sow Lin" << endl;
+				cout << "2) Chan Sow Lin -> Titiwangsa" << endl;
+				cout << "3) Return to main menu" << endl;
+				cout << "Select your route: " << endl;
+				cin >> route;
+
+
+				if (route == 3)
+				{
+					mainmenu = 1;
+				}
+				else if (route == 1 || route == 2)
+				{
+					break;
+				}
+				else
+				{
+					cin.clear(); //remove the input operation
+					cin.ignore(numeric_limits<streamsize>::max(), '\n'); //remove content
+					cout << "Incorrect Input" << endl;
+					system("pause");
+					system("CLS");
+				}
+				
+
+
+			}
 
 			int departure;
-			cout << "Choose your Departure location: " << endl;
-			cin >> departure;
-			listAllPossibleArrivalStation(route, departure);
+			while (mainmenu == 0)
+			{
+				system("CLS");
+				cout << "1) Titiwangsa" << endl;
+				cout << "2) PWTC" << endl;
+				cout << "3) Sultan Ismail" << endl;
+				cout << "4) Majlis Jamek" << endl;
+				cout << "5) Plaza Rakyat" << endl;
+				cout << "6) Hang Tuah" << endl;
+				cout << "7) Pudu" << endl;
+				cout << "8) Chan Sow Lin" << endl;
+				cout << "9) Return to Main Menu" << endl << endl;
+				cout << "Choose your Departure location: ";
+				cin >> departure;
+
+				
+				if (departure > 0 && departure < 9)
+				{
+					system("CLS");
+					break;
+				}
+				else if (departure == 9)
+				{
+					mainmenu == 1;
+				}
+				else
+				{
+					cin.clear(); //remove the input operation
+					cin.ignore(numeric_limits<streamsize>::max(), '\n'); //remove content
+					cout << "Incorrect Input" << endl;
+					system("pause");
+					system("CLS");
+				}
+			}
+
 
 			int arrival;
-			cout << "Choose your Arrival location: " << endl;
-			cin >> arrival;
+			while (mainmenu == 0)
+			{
+				listAllPossibleArrivalStation(route, departure);
+				cout << "9) Return to Main Menu" << endl << endl;
+				cout << "Choose your Arrival location: ";
+				cin >> arrival;
 
-			listAllPossibleDepartureTime(route, departure);
+				if (arrival == 9)
+				{
+					mainmenu = 1;
+					break;
+				}
+				else if (route == 1 && arrival > departure && arrival <9)
+				{
+					system("CLS");
+					break;
+				}
+				else if (route == 2 && arrival < departure || arrival > 0)
+				{
+					system("CLS");
+					break;
+				}
+				else
+				{
+					cin.clear(); //remove the input operation
+					cin.ignore(numeric_limits<streamsize>::max(), '\n'); //remove content
+					cout << "Incorrect Input" << endl;
+					system("pause");
+					system("CLS");
+				}
+			}
 
-			//Get Current Date and Time
-			struct tm newtime;
-			time_t now = time(0);
-			localtime_s(&newtime, &now);
-
-			int CurrentHours = newtime.tm_hour;
-			int CurrentMins = newtime.tm_min;
 
 
-			int DepartureYear, DepartureMonth, DepartureDay, DepartureHours, DepartureMins = 0;
+			int DepartureYear, DepartureMonth, DepartureDay = 0;
 			char seperator1, seperator2;
 			int InputCorrect = 0;
 			int TodayDate = 0;
 
-			do {
+			while (InputCorrect == 0 && mainmenu == 0) {
 				cout << "Please enter your departure Date (in YYYY/MM/DD format): " << endl;
 				cout << "Note: Ticket can only be bought before 2025" << endl;
+				cout << "Date: ";
 				cin >> DepartureYear >> seperator1 >> DepartureMonth >> seperator2 >> DepartureDay;
 
 				if (cin.fail() || seperator1 != '/' || seperator2 != '/')
 				{
 					cin.clear(); //remove the input operation
 					cin.ignore(numeric_limits<streamsize>::max(), '\n'); //remove content
-					cout << "Invalid Format";
+					cout << "Invalid Format" << endl;
+					system("pause");
+					system("CLS");
 					continue;
 				}
 
@@ -391,8 +474,31 @@ int main()
 					InputCorrect = 1;
 				}
 
-			} while (InputCorrect == 0);
+			}
 
+			double possibleMinutes = 0;
+			//possibleMinutes = listAllPossibleDepartureTime(route, departure);
+
+			cout << possibleMinutes << endl;
+
+			int count;
+			//Create a empty dynamic array to contain all departure time
+			if (route == 1)
+			{
+				count = 38;
+			}
+			else
+			{
+				count = 38; 
+			}
+
+			//Get Current Date and Time
+			struct tm newtime;
+			time_t now = time(0);
+			localtime_s(&newtime, &now);
+
+			int CurrentHours = newtime.tm_hour;
+			int CurrentMins = newtime.tm_min;
 
 
 			//displayDetailsBetweenTwoSelectedCities(route, departure, arrival);

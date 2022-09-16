@@ -1,4 +1,3 @@
 ﻿  Prototypee.cpp
-C:\Users\ILLEGEAR\source\repos\Group11_DSTR_Assignment\Group11_DSTR_Assignment\Prototypee.cpp(234,44): warning C4244: '=': conversion from 'double' to 'int', possible loss of data
-C:\Users\ILLEGEAR\source\repos\Group11_DSTR_Assignment\Group11_DSTR_Assignment\Prototypee.cpp(350,53): warning C4101: 'DepartureHours': unreferenced local variable
-  Group11_DSTR_Assignment.vcxproj -> C:\Users\ILLEGEAR\source\repos\Group11_DSTR_Assignment\Debug\Group11_DSTR_Assignment.exe
+C:\Users\ILLEGEAR\Desktop\DataStructureAssignment\Group11_DSTR_Assignment\Group11_DSTR_Assignment\Prototypee.cpp(382,15): warning C4553: '==': result of expression not used; did you intend '='?
+  Group11_DSTR_Assignment.vcxproj -> C:\Users\ILLEGEAR\Desktop\DataStructureAssignment\Group11_DSTR_Assignment\Debug\Group11_DSTR_Assignment.exe
