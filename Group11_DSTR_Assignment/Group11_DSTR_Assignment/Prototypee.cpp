@@ -30,17 +30,19 @@ struct Ticket {
 
 	int TransactionID;
 	int TicketID;
+	string TicketRoute;
 	string NameOfTheSourceStation;
 	string NameofTheTargetStation;
 	int TicketAmount;
 	string TransactionDateAndTime;
+	string DepartureDate;
 	string DepartureTime;
-	string CustomerID;
+	int TotalTicketPrice;
+	int CustomerID;
 	string CustomerName;
 	string CustomerIcOrPassport;
 
 	Ticket* nextAdd;
-	Ticket* prevAdd;
 
 }*ticketHead, * ticketCurrent;
 
@@ -74,6 +76,8 @@ void drawmap() {
 }
 
 
+// Station
+
 //create a Station node function
 Station* createStationNode(int StationID, string StationName, string PreviousStationName, string NextStationName, 
 	double DistanceBetweenPreviousStation, double CostBetweenPreviousStation, int TimeBetweenPreviousStation,
@@ -99,6 +103,28 @@ Station* createStationNode(int StationID, string StationName, string PreviousSta
 }
 
 
+//Insert Station Node to the Front of the list
+void insertStationNodeToTheFrontList(Station* StationNode)
+{
+	// If the list still empty
+	if (stationHead == NULL && stationTail == NULL)
+	{
+		stationHead = stationTail = StationNode;
+	}
+	// If the list is not empty
+	else
+	{
+		StationNode->nextAdd = stationHead;
+		stationHead->prevAdd = StationNode;
+		stationHead = StationNode;
+	}
+}
+
+
+
+
+
+//Customer Loging and Create Account
 //create a Customer node function
 Customer* createCustomerNode(int customerId, string customerName, string customerIcOrPassport, string customerPassword)
 {
@@ -115,7 +141,7 @@ Customer* createCustomerNode(int customerId, string customerName, string custome
 
 
 //Insert Customer Node to the End of the list
-void insertCustomerNodeToTheEndList(Customer* CustomerNode) 
+void insertCustomerNodeToTheEndList(Customer* CustomerNode)
 {
 	//Situation 1: List still empty
 	if (customerHead == NULL)
@@ -136,7 +162,7 @@ void insertCustomerNodeToTheEndList(Customer* CustomerNode)
 }
 
 
-//Check and Create Customer Account
+//Check Customer Account when Creating a new Customer Account
 int createCustomerAccount(string customerName, string customerIcOrPassport, string customerPassword)
 {
 	int customerId;
@@ -172,26 +198,27 @@ int createCustomerAccount(string customerName, string customerIcOrPassport, stri
 }
 
 
-//Check Customer Account and password
-int checkCustomerAccount(string customerIcOrPassport, string customerPassword)
+//Check Customer Account and password when logging
+int checkCustomerLoggingAccount(string customerIcOrPassport, string customerPassword)
 {
+	//If there is no account exists in this system
 	if (customerHead == NULL)
 	{
 		cout << "This system has no customer account" << endl;
 		system("pause");
 		return 0;
 	}
-	else
+	//If there is only one account exists in this system
+	else if (customerHead->nextAdd == NULL)
 	{
-		customerCurrent = customerHead;
 		//check customer account
-		if (customerCurrent->CustomerIcOrPassport == customerIcOrPassport)
+		if (customerHead->CustomerIcOrPassport == customerIcOrPassport)
 		{
 
-			if (customerCurrent->CustomerPassword == customerPassword)
+			if (customerHead->CustomerPassword == customerPassword)
 			{
-				cout << "Welcome Mr/Mrs " << customerCurrent->CustomerName << endl;
-				return customerCurrent->CustomerId;
+				cout << "Welcome Mr/Mrs " << customerHead->CustomerName << endl;
+				return customerHead->CustomerId;
 			}
 			else
 			{
@@ -200,6 +227,10 @@ int checkCustomerAccount(string customerIcOrPassport, string customerPassword)
 				return 0;
 			}
 		}
+	}
+	else
+	{
+		customerCurrent = customerHead;
 		while (customerCurrent->nextAdd != NULL)
 		{
 			customerCurrent = customerCurrent->nextAdd;
@@ -219,29 +250,138 @@ int checkCustomerAccount(string customerIcOrPassport, string customerPassword)
 				}
 			}
 		}
-
-		cout << "This IC or Passport Number does not exist in this system, Please create a new account." << endl;
-		return 0;
 	}
+	cout << "This IC or Passport Number does not exist in this system, Please create a new account." << endl;
+	return 0;
 }
 
-//Insert to the Front of the list
-void insertStationNodeToTheFrontList(Station* StationNode)
+
+
+
+
+//Generating Ticket
+
+//create a Ticket node function
+Ticket* createTicketNode(int transactionId, int ticketId, string TicketRoute, string departureStation, string arrivalStation, int ticketAmount,
+	string transactionDateAndTime, string departureDate, string departureTime,
+	int totalTicketPrice, int customerId, string customerName, string customerIcOrPassport)
 {
-	// If the list still empty
-	if (stationHead == NULL && stationTail == NULL)
+	Ticket* TicketNode = new Ticket;
+	TicketNode->TransactionID = transactionId;
+	TicketNode->TicketID = ticketId;
+	TicketNode->TicketRoute = TicketRoute;
+	TicketNode->NameOfTheSourceStation = departureStation;
+	TicketNode->NameofTheTargetStation = arrivalStation;
+	TicketNode->TicketAmount = ticketAmount;
+	TicketNode->TransactionDateAndTime = transactionDateAndTime;
+	TicketNode->DepartureDate = departureDate;
+	TicketNode->DepartureTime = departureTime;
+	TicketNode->TotalTicketPrice = totalTicketPrice;
+	TicketNode->CustomerID = customerId;
+	TicketNode->CustomerName = customerName;
+	TicketNode->CustomerIcOrPassport = customerIcOrPassport;
+
+	TicketNode->nextAdd = NULL;
+
+	return TicketNode;
+}
+
+
+//Insert Ticket Node to the Front of the lisst
+void insertTicketNodeToTheFrontList(Ticket* ticketNode)
+{
+	//Situation 1: List still empty
+	if (ticketHead == NULL)
 	{
-		stationHead = stationTail = StationNode;
+		ticketHead = ticketNode;
 	}
-	// If the list is not empty
+
+	//Situation 2: List not empty
 	else
 	{
-		StationNode->nextAdd = stationHead;
-		stationHead->prevAdd = StationNode;
-		stationHead = StationNode;
+		ticketNode->nextAdd = ticketHead;
+		ticketHead = ticketNode;
 	}
 }
 
+//Create Ticket
+void createTicket(string TicketRoute, string departureStation, string arrivalStation, string departureDate, string departureTime, int ticketAmount, int totalTicketPrice, int customerId)
+{
+	//get newest transaction id and ticket id
+	int transactionId = 0;
+	int ticketId = 0;
+	if (ticketHead == NULL)
+	{
+		transactionId = 1;
+		ticketId = 1;
+	}
+	else
+	{
+		ticketCurrent = ticketHead;
+		if (ticketCurrent ->nextAdd != NULL)
+		{
+			//Generating Transaction ID
+			if (ticketCurrent->TransactionID > transactionId)
+			{
+				transactionId = ticketCurrent->TransactionID + 1;
+			}
+			//Geneating Ticket ID
+			if (ticketCurrent->TicketID > ticketId)
+			{
+				transactionId = ticketCurrent->TicketID + 1;
+			}
+			ticketCurrent = ticketCurrent->nextAdd;
+		}
+	}
+	
+	// Get transaction date and time
+	struct tm newtime;
+	time_t now = time(0);
+	localtime_s(&newtime, &now);
+
+	int Year = 1900 + newtime.tm_year;
+	int Month = 1 + newtime.tm_mon;
+	int Day = newtime.tm_mday;
+	int Hours = newtime.tm_hour;
+	int Mins = newtime.tm_min;
+
+	string transactionDateAndTime = to_string(Year) + "/" + to_string(Month) + "/" + to_string(Day)
+		+ " " + to_string(Hours) + ":" + to_string(Mins);
+
+	//Get Customer Name and IC/Passport
+	string customerName;
+	string customerIcOrPassport;
+	
+	customerCurrent = customerHead;
+	while (true)
+	{
+		if (customerCurrent->CustomerId == customerId)
+		{
+			customerName = customerCurrent->CustomerName;
+			customerIcOrPassport = customerCurrent->CustomerIcOrPassport;
+			break;
+		}
+		else
+		{
+			customerCurrent = customerCurrent->nextAdd;
+		}
+	}
+
+
+	for (int i = 0; i < ticketAmount; i++)
+	{
+		Ticket* ticketNode = createTicketNode(transactionId, ticketId, TicketRoute, departureStation, arrivalStation, ticketAmount, transactionDateAndTime, departureDate, departureTime, totalTicketPrice, customerId, customerName, customerIcOrPassport);
+		insertTicketNodeToTheFrontList(ticketNode);
+		ticketId = ticketId + 1;
+	}
+
+}
+
+
+
+
+
+//1) Purchase Ticket
 
 //List all possible arrival route
 void listAllPossibleArrivalStation(int route, int departure) {
@@ -382,8 +522,8 @@ string listAllPossibleDepartureTime(int route, int departure, int todaydate)
 
 	int size = 38; // use for input checking later
 
-	//Create a empty dynamic array to contain all possible departure time
-	string* TrainArrivalTime = new string [38];
+	//Create a empty array to contain all possible departure time
+	string TrainArrivalTime [38];
 
 	//Calculate all possible departure time
 	int hour = 6;
@@ -410,7 +550,7 @@ string listAllPossibleDepartureTime(int route, int departure, int todaydate)
 	int check_hours;
 	int check_minutes;
 	int arrayindex2 = 0;
-	string* TodayTrainArrivalTime = new string[38];
+	string TodayTrainArrivalTime [38];
 
 	if (todaydate == 1)
 	{
@@ -484,21 +624,30 @@ string listAllPossibleDepartureTime(int route, int departure, int todaydate)
 
 
 //Display Ticket Details
-void displayDetailsBetweenTwoSelectedCities(int route, int departure, int arrival,int Year,int Month,int Days,int Hours,int Minutes)
+void displayDetailsBetweenTwoSelectedCities(int route, int departure, int arrival,int Year,int Month,int Days,int Hours,int Minutes, int customerId)
 {
-	stationCurrent = stationHead;
+	
 	double totaldistance = 0;
 	double totalexpenses = 0;
 	int totaltime = 0;
 
+	
+	string TicketRoute;
+
+
+	string departureStation;
+	string arrivalStation;
 	if (route == 1)
 	{
+		TicketRoute = "Titiwangsa -> Chan Sow Lin";
+		stationCurrent = stationHead;
 		for (int i = 1; i < departure; i++)
 		{
 			stationCurrent = stationCurrent->nextAdd;
 		}
 
-		cout << "Departure Station: " << stationCurrent->StationName << endl;
+		departureStation = stationCurrent->StationName;
+		cout << "Departure Station: " << departureStation << endl;
 
 		for (int i = departure; i < arrival; i++)
 		{
@@ -508,74 +657,195 @@ void displayDetailsBetweenTwoSelectedCities(int route, int departure, int arriva
 			stationCurrent = stationCurrent->nextAdd;
 		}
 
-		cout << "Arrival Station: " << stationCurrent->StationName << endl;
-		cout << "Total Distance: " << totaldistance << " KM" << endl;
-		cout << "Total Expenses per ticket: RM " << totalexpenses << endl;
-		cout << "Total Time: " << totaltime << " Minutes" << endl << endl;
-
-		cout << "Departure Time: " << Year << "/" << setw(2) << setfill('0') << Month << "/" << setw(2) << setfill('0') <<
-			Days << " " << setw(2) << setfill('0') << Hours << ":" << setw(2) << setfill('0') << Minutes << endl;
+		arrivalStation = stationCurrent->StationName;
+		cout << "Arrival Station: " << arrivalStation << endl;
 
 		
-		int arrival_year = Year;
-		int arrival_month = Month;
-		int arrival_days = Days;
-		int arrival_hours = Hours;
-		int arrival_minutes = Minutes + totaltime;
-		
-
-		//Check Minutes
-		if (arrival_minutes > 59)
+	}
+	else if (route == 2)
+	{
+		TicketRoute = "Chan Sow Lin -> Titiwangsa";
+		stationCurrent = stationTail;
+		for (int i = 8; i > departure; i--)
 		{
-			arrival_minutes = arrival_minutes - 60;
-			arrival_hours = arrival_hours + 1;
+			stationCurrent = stationCurrent->prevAdd;
 		}
 
-		//Check Hours
-		if (arrival_hours > 23)
+		departureStation = stationCurrent->StationName;
+		cout << "Departure Station: " << departureStation << endl;
+
+		for (int i = departure; i > arrival; i--)
 		{
-			arrival_hours = 0;
-			arrival_days = arrival_days + 1;
+			totaldistance = totaldistance + stationCurrent->DistanceBetweenPreviousStation;
+			totalexpenses = totalexpenses + stationCurrent->CostBetweenPreviousStation;
+			totaltime = totaltime + stationCurrent->TimeBetweenPreviousStation;
+			stationCurrent = stationCurrent->prevAdd;
 		}
 
-		//Check Days
-		if ((arrival_month == 4 || arrival_month == 6 || arrival_month == 9 || arrival_month == 11) && arrival_days > 30)
-		{
-			arrival_days = 1;
-			arrival_month = arrival_month + 1;
-		}
-		else if (arrival_month == 2)
-		{
-			//leap year
-			if (arrival_year % 4 == 0 && arrival_days > 29)
-			{
-				arrival_days = 1;
-				arrival_month = arrival_month + 1;
-			}
-			//not leap year
-			if (arrival_year % 4 != 0 && arrival_days > 28)
-			{
-				arrival_days = 1;
-				arrival_month = arrival_month + 1;
-			}
-		}
-		else if (arrival_days > 31)
-		{
-			arrival_days = 1;
-			arrival_month = arrival_month + 1;
-		}
-
-		//Check Months
-		if (arrival_month > 12)
-		{
-			arrival_month = 1;
-			arrival_year = arrival_year + 1;
-		}
-
-		cout << "Estimate Arrival Time: " << arrival_year << "/" << setw(2) << setfill('0') << arrival_month << "/" << setw(2) << setfill('0') <<
-			arrival_days << " " << setw(2) << setfill('0') << arrival_hours << ":" << setw(2) << setfill('0') << arrival_minutes << endl << endl;
+		arrivalStation = stationCurrent->StationName;
+		cout << "Arrival Station: " << arrivalStation << endl;
 
 	}
+	cout << "Total Distance: " << totaldistance << " KM" << endl;
+	cout << "Total Expenses per ticket: RM " << fixed << setprecision(2) << setfill('0') << totalexpenses << endl;
+	cout << "Total Time: " << totaltime << " Minutes" << endl << endl;
+
+	cout << "Departure Date: " << Year << "/" << setw(2) << setfill('0') << Month << "/" << setw(2) << setfill('0') << Days << endl;
+	cout << "Departure Time: " << setw(2) << setfill('0') << Hours << ":" << setw(2) << setfill('0') << Minutes << endl << endl;
+
+	string departureDate = to_string(Year) + "/" + to_string(Month) + "/" + to_string(Days);
+	string departureTime = to_string(Hours) + ":" + to_string(Minutes);
+
+	int arrival_year = Year;
+	int arrival_month = Month;
+	int arrival_days = Days;
+	int arrival_hours = Hours;
+	int arrival_minutes = Minutes + totaltime;
+
+
+	//Check Minutes
+	if (arrival_minutes > 59)
+	{
+		arrival_minutes = arrival_minutes - 60;
+		arrival_hours = arrival_hours + 1;
+	}
+
+	//Check Hours
+	if (arrival_hours > 23)
+	{
+		arrival_hours = 0;
+		arrival_days = arrival_days + 1;
+	}
+
+	//Check Days
+	if ((arrival_month == 4 || arrival_month == 6 || arrival_month == 9 || arrival_month == 11) && arrival_days > 30)
+	{
+		arrival_days = 1;
+		arrival_month = arrival_month + 1;
+	}
+	else if (arrival_month == 2)
+	{
+		//leap year
+		if (arrival_year % 4 == 0 && arrival_days > 29)
+		{
+			arrival_days = 1;
+			arrival_month = arrival_month + 1;
+		}
+		//not leap year
+		if (arrival_year % 4 != 0 && arrival_days > 28)
+		{
+			arrival_days = 1;
+			arrival_month = arrival_month + 1;
+		}
+	}
+	else if (arrival_days > 31)
+	{
+		arrival_days = 1;
+		arrival_month = arrival_month + 1;
+	}
+
+	//Check Months
+	if (arrival_month > 12)
+	{
+		arrival_month = 1;
+		arrival_year = arrival_year + 1;
+	}
+
+	cout << "Arrival Date: " << arrival_year << "/" << setw(2) << setfill('0') << arrival_month << "/" << setw(2) << setfill('0') << arrival_days << endl;
+	cout << "Estimate Arrival Time: " << setw(2) << setfill('0') << arrival_hours << ":" << setw(2) << setfill('0') << arrival_minutes << endl << endl;
+
+	string arrivalDate = to_string(arrival_year) + "/" + to_string(arrival_month) + "/" + to_string(arrival_days);
+	string arrivalTime = to_string(arrival_hours) + ":" + to_string(arrival_minutes);
+
+	int ticketAmount;
+	int totalTicketPrice;
+
+	while (true)
+	{
+		cout << "Please input your ticket amount: " << endl;
+		cout << "Press 0 is to return main menu: " << endl;
+		cout << "Ticket amount: " << endl;
+		cin >> ticketAmount;
+
+		if (ticketAmount < 1)
+		{
+			return;
+		}
+		else if (ticketAmount > 0)
+		{
+			totalTicketPrice = ticketAmount * totalexpenses;
+			break;
+		}
+		else
+		{
+			cin.clear(); //remove the input operation
+			cin.ignore(numeric_limits<streamsize>::max(), '\n'); //remove content
+			cout << "Invalid Input" << endl;
+		}
+	}
+
+	int confirmPurchase;
+	while (true)
+	{
+		cout << "Confirm Puchase? " << endl;
+		cout << "1)Yes     2)No " << endl;
+		cin >> confirmPurchase;
+
+		if (confirmPurchase == 1)
+		{
+			break;
+		}
+		else if (confirmPurchase == 2)
+		{
+			cout << "Returning to main menu" << endl;
+			return;
+		}
+		else
+		{
+			cin.clear(); //remove the input operation
+			cin.ignore(numeric_limits<streamsize>::max(), '\n'); //remove content
+			cout << "Invalid Input" << endl;
+		}
+	}
+
+	while (true)
+	{
+		unsigned long long int creditCardNumber;
+		int CVV;
+		int valid;
+		cout << "Please input your Credit Card Number (16 digits): ";
+		cin >> creditCardNumber;
+
+		valid = creditCardNumber / 1000000000000000;
+		cout << valid;
+		if (cin.fail() || valid < 1 || valid > 9)
+		{
+			cin.clear(); //remove the input operation
+			cin.ignore(numeric_limits<streamsize>::max(), '\n'); //remove content
+			cout << "Invalid Credit Card number" << endl;
+			continue;
+		}
+		cout << "Please input your CVV Number (3 digits): ";
+		cin >> CVV;
+		cout << valid;
+		valid = CVV / 100;
+
+		if (cin.fail() || valid < 1 || valid > 9)
+		{
+			cin.clear(); //remove the input operation
+			cin.ignore(numeric_limits<streamsize>::max(), '\n'); //remove content
+			cout << "Invalid CVV number" << endl;
+			continue;
+		}
+
+		break;
+	}
+
+	createTicket(TicketRoute,departureStation, arrivalStation, departureDate, departureTime, ticketAmount, totalTicketPrice, customerId);
+
+	cout << "Thank You Very Much" << endl;
+	system("pause");
+
 }
 
 
@@ -760,9 +1030,144 @@ void purchaseticket(int customerId)
 		DepartureMinutes = stoi(DepartureTime.substr(pos + 1));
 	}
 
-	displayDetailsBetweenTwoSelectedCities(route, departure, arrival, DepartureYear, DepartureMonth, DepartureDay, DepartureHour, DepartureMinutes);
+	displayDetailsBetweenTwoSelectedCities(route, departure, arrival, DepartureYear, DepartureMonth, DepartureDay, DepartureHour, DepartureMinutes,customerId);
 	
 }
+
+
+
+
+//2) Print Station Details
+void printStationDetails()
+{
+	int decision;
+	cout << "1) Titiwangsa" << endl;
+	cout << "2) PWTC" << endl;
+	cout << "3) Sultan Ismail" << endl;
+	cout << "4) Majlis Jamek" << endl;
+	cout << "5) Plaza Rakyat" << endl;
+	cout << "6) Hang Tuah" << endl;
+	cout << "7) Pudu" << endl;
+	cout << "8) Chan Sow Lin" << endl;
+	cout << "9) Return to Main Menu" << endl << endl;
+	cin >> decision;
+
+	if (decision > 0 && decision < 9)
+	{
+		stationCurrent = stationHead;
+		while(stationCurrent !=NULL)
+		{
+			if (stationCurrent->StationID == decision)
+			{
+				cout << "Station ID: " << stationCurrent->StationID << endl;
+				cout << "Staion Name: " << stationCurrent->StationName << endl;
+				cout << "Station Previous Station Name: " << stationCurrent->PreviousStationName << endl;
+				cout << "Station Next Station Name: " << stationCurrent->NextStationName << endl;
+				cout << "Distance Between Previous Station: " << stationCurrent->DistanceBetweenPreviousStation << endl;
+				cout << "Cost Between Previous Station: " << stationCurrent->CostBetweenPreviousStation << endl;
+				cout << "Time Between Previous Station: " << stationCurrent->TimeBetweenPreviousStation << endl;
+				cout << "Distance Between Next Station: " << stationCurrent->DistanceBetweenNextStation << endl;
+				cout << "Cost Between Next Station: " << stationCurrent->CostBetweenNextStation << endl;
+				cout << "Time Between Next Station: " << stationCurrent->TimeBetweenNextStation << endl;
+				cout << "Nearby Sightseeing Spots: " << stationCurrent->NearbySightseeingSpots << endl;
+				break;
+			}
+			stationCurrent = stationCurrent->nextAdd;
+		}
+
+		int Continue;
+		while (true)
+		{
+			cout << "Continue Searching for station details ?" << endl;
+			cout << "1) Yes     2) No" << endl;
+			cin >> Continue;
+
+			if (Continue == 1)
+			{
+				printStationDetails();
+			}
+			else if (Continue == 2)
+			{
+				return;
+			}
+			else
+			{
+				cin.clear(); //remove the input operation
+				cin.ignore(numeric_limits<streamsize>::max(), '\n'); //remove content
+				cout << "Incorrect Input" << endl;
+			}
+		}
+	}
+	else if (decision == 9)
+	{
+		return;
+	}
+	else
+	{
+		cin.clear(); //remove the input operation
+		cin.ignore(numeric_limits<streamsize>::max(), '\n'); //remove content
+		cout << "Incorrect Input" << endl;
+		printStationDetails();
+	}
+
+
+}
+
+
+//3) Check and Print Transaction History
+void printTransactionHistory(int customerId)
+{
+	//If system has no ticket history
+	if (ticketHead == NULL)
+	{
+		cout << "This system has no transaction history" << endl;
+	}
+
+	else
+	{
+		int ticketCount = 0;
+		ticketCurrent = ticketHead;
+		while (ticketCurrent != NULL)
+		{
+			if (ticketCurrent->CustomerID == customerId)
+			{
+				cout << "Transaction Id: " << ticketCurrent->TransactionID << endl;
+				cout << "Ticket id: " << ticketCurrent->TicketID << endl;
+				cout << "Ticket Route: " << ticketCurrent->TicketRoute << endl;
+				cout << "Departure Station: " << ticketCurrent->NameOfTheSourceStation << endl;
+				cout << "Arrival Station: " << ticketCurrent->NameofTheTargetStation << endl;
+				cout << "Ticket Amount: " << ticketCurrent->TicketAmount << endl;
+				cout << "Transaction Date And Time: " << ticketCurrent->TransactionDateAndTime << endl;
+				cout << "Departure Date: " << ticketCurrent->DepartureDate << endl;
+				cout << "Departure Time: " << ticketCurrent->DepartureTime << endl;
+				cout << "Total Ticket Price: " << ticketCurrent->TotalTicketPrice << endl << endl;
+				ticketCount++;
+			}
+			ticketCurrent = ticketCurrent->nextAdd;
+		}
+
+		if (ticketCount > 0)
+		{
+			cout << "You have total of " << ticketCount << "in your account" << endl;
+		}
+		else
+		{
+			cout << "This account has no purchase history" << endl;
+		}
+	}
+	int choice;
+	cout << "1) Delete purchase transaction" << endl;
+	cout << "2) Return to Main menu " << endl;
+	cin >> choice;
+	if (choice == 1)
+	{
+
+	}
+}
+
+
+
+
 
 
 int main()
@@ -798,6 +1203,7 @@ int main()
 				int role;
 				cout << "1) Passenger" << endl;
 				cout << "2) Admin" << endl;
+				cout << "3) Return to Main Menu" << endl;
 				cout << "Select your role: ";
 				cin >> role;
 
@@ -811,7 +1217,7 @@ int main()
 					cout << "Please Enter your Password" << endl;
 					cin >> customerPassword;
 
-					int customerId = checkCustomerAccount(customerAccount, customerPassword);
+					int customerId = checkCustomerLoggingAccount(customerAccount, customerPassword);
 
 					if (customerId != 0)
 					{
@@ -829,13 +1235,20 @@ int main()
 						{
 							cout << "1) Purchase Ticket" << endl;
 							cout << "2) Search subway station details" << endl;
-							cout << "3) View transaction history" << endl;
-							cout << 
-							cout << "2) Exit to Main Menu" << endl;
+							cout << "3) View and delete transaction history" << endl;
+							cout << "5) Exit to Main Menu" << endl;
 							cin >> customerDecision;
 							if (customerDecision == 1)
 							{
 								purchaseticket(customerId);
+							}
+							else if (customerDecision == 2)
+							{
+								printStationDetails();
+							}
+							else if (customerDecision == 3)
+							{
+								printTransactionHistory(customerId);
 							}
 							else
 							{
@@ -855,6 +1268,16 @@ int main()
 				{
 
 					cout << "Admin";
+				}
+				else if(role == 3)
+				{
+					break;
+				}
+				else
+				{
+					cin.clear(); //remove the input operation
+					cin.ignore(numeric_limits<streamsize>::max(), '\n'); //remove content
+					cout << "Invalid Format" << endl;
 				}
 			}
 
