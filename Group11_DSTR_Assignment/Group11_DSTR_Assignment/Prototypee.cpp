@@ -765,6 +765,8 @@ void displayDetailsBetweenTwoSelectedCities(int route, int departure, int arriva
 		}
 	}
 
+	cout << "Total ticket price is: RM " << fixed << setprecision(2) << setfill('0') << totalTicketPrice << endl;
+
 	int confirmPurchase;
 	while (true)
 	{
@@ -1009,6 +1011,7 @@ void purchaseticket(int customerId)
 		DepartureMinutes = stoi(DepartureTime.substr(pos + 1));
 	}
 
+	//display details between two cities and confirm purchase
 	displayDetailsBetweenTwoSelectedCities(route, departure, arrival, DepartureYear, DepartureMonth, DepartureDay, DepartureHour, DepartureMinutes,customerId);
 	
 }
@@ -1559,14 +1562,14 @@ int main()
 	Station* StationNode7 = createStationNode(7, "Pudu", "Hang Tuah", "Chan Sow Lin", 5, 0.50, 4, 5, 0.50, 4, "Pasar Besar Pudu");
 	Station* StationNode8 = createStationNode(8, "Chan Sow Lin", "Pudu", "", 5, 0.50, 4, 0, 0, 0, "East Club");
 
-	insertStationNodeToTheEndList(StationNode8);
-	insertStationNodeToTheEndList(StationNode7);
-	insertStationNodeToTheEndList(StationNode6);
-	insertStationNodeToTheEndList(StationNode5);
-	insertStationNodeToTheEndList(StationNode4);
-	insertStationNodeToTheEndList(StationNode3);
-	insertStationNodeToTheEndList(StationNode2);
 	insertStationNodeToTheEndList(StationNode1);
+	insertStationNodeToTheEndList(StationNode2);
+	insertStationNodeToTheEndList(StationNode3);
+	insertStationNodeToTheEndList(StationNode4);
+	insertStationNodeToTheEndList(StationNode5);
+	insertStationNodeToTheEndList(StationNode6);
+	insertStationNodeToTheEndList(StationNode7);
+	insertStationNodeToTheEndList(StationNode8);
 
 	while (true)
 	{
