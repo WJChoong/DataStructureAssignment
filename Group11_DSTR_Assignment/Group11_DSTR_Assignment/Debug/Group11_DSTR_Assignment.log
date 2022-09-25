@@ -1,4 +1,6 @@
 ﻿  Prototypee.cpp
-C:\Users\ILLEGEAR\Desktop\DataStructureAssignment\Group11_DSTR_Assignment\Group11_DSTR_Assignment\Prototypee.cpp(776,36): warning C4244: '=': conversion from 'double' to 'int', possible loss of data
-C:\Users\ILLEGEAR\Desktop\DataStructureAssignment\Group11_DSTR_Assignment\Group11_DSTR_Assignment\Prototypee.cpp(819,28): warning C4244: '=': conversion from 'unsigned __int64' to 'int', possible loss of data
+C:\Users\ILLEGEAR\Desktop\DataStructureAssignment\Group11_DSTR_Assignment\Group11_DSTR_Assignment\Prototypee.cpp(757,36): warning C4244: '=': conversion from 'double' to 'int', possible loss of data
+C:\Users\ILLEGEAR\Desktop\DataStructureAssignment\Group11_DSTR_Assignment\Group11_DSTR_Assignment\Prototypee.cpp(800,28): warning C4244: '=': conversion from 'unsigned __int64' to 'int', possible loss of data
+C:\Users\ILLEGEAR\Desktop\DataStructureAssignment\Group11_DSTR_Assignment\Group11_DSTR_Assignment\Prototypee.cpp(1368,59): warning C4244: '=': conversion from 'double' to 'int', possible loss of data
+C:\Users\ILLEGEAR\Desktop\DataStructureAssignment\Group11_DSTR_Assignment\Group11_DSTR_Assignment\Prototypee.cpp(1391,59): warning C4244: '=': conversion from 'double' to 'int', possible loss of data
   Group11_DSTR_Assignment.vcxproj -> C:\Users\ILLEGEAR\Desktop\DataStructureAssignment\Group11_DSTR_Assignment\Debug\Group11_DSTR_Assignment.exe

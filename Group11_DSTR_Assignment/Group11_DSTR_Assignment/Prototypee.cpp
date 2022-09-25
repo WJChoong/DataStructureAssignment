@@ -101,8 +101,8 @@ Station* createStationNode(int StationID, string StationName, string PreviousSta
 	return StationNode;
 }
 
-//Insert Station Node to the Front of the list
-void insertStationNodeToTheFrontList(Station* StationNode)
+//Insert Station Node to the End of the list
+void insertStationNodeToTheEndList(Station* StationNode)
 {
 	// If the list still empty
 	if (stationHead == NULL && stationTail == NULL)
@@ -112,9 +112,9 @@ void insertStationNodeToTheFrontList(Station* StationNode)
 	// If the list is not empty
 	else
 	{
-		StationNode->nextAdd = stationHead;
-		stationHead->prevAdd = StationNode;
-		stationHead = StationNode;
+		StationNode->prevAdd = stationTail;
+		stationTail->nextAdd = StationNode;
+		stationTail = StationNode;
 	}
 }
 
@@ -306,7 +306,7 @@ void createTicket(string TicketRoute, string departureStation, string arrivalSta
 	else
 	{
 		ticketCurrent = ticketHead;
-		if (ticketCurrent != NULL)
+		while (ticketCurrent != NULL)
 		{
 			//Generating Transaction ID
 			if (ticketCurrent->TransactionID > transactionId)
@@ -1104,6 +1104,11 @@ void deletePurchaseTransaction(int customerId)
 	{
 		if (ticketCurrent->TransactionID == transactionId && ticketCurrent->CustomerID == customerId)
 		{
+			if (ticketCurrent == ticketHead)
+			{
+				ticketHead = ticketHead->nextAdd;
+			}
+
 			ticketTemp = ticketCurrent;
 			ticketCurrent = ticketCurrent->nextAdd;
 			delete ticketTemp;
@@ -1133,6 +1138,7 @@ void printAndDeleteTransactionHistory(int customerId)
 	if (ticketHead == NULL)
 	{
 		cout << "This system has no transaction history" << endl;
+		return;
 	}
 
 	else
@@ -1160,7 +1166,7 @@ void printAndDeleteTransactionHistory(int customerId)
 
 		if (ticketCount > 0)
 		{
-			cout << "You have total of " << ticketCount << "in your account" << endl;
+			cout << "You have total of " << ticketCount << " tickets in your account" << endl;
 		}
 		else
 		{
@@ -1177,6 +1183,7 @@ void printAndDeleteTransactionHistory(int customerId)
 		if (choice == 1)
 		{
 			deletePurchaseTransaction(customerId);
+			return;
 		}
 		else if (choice == 2)
 		{
@@ -1543,14 +1550,23 @@ int main()
 	stationHead = stationTail = NULL;
 
 	
-	Station* StationNode1 = createStationNode(1, "Titiwangsa", "", "PWTC", 0, 0, 0, 4, 0.40, 3, "NearbySeeingSpot1");
-	Station* StationNode2 = createStationNode(2, "PWTC", "Titiwangsa", "Sultan Ismail", 4, 0.40, 3, 8, 0.80, 7, "NearbySeeingSpot2");
-	Station* StationNode3 = createStationNode(3, "Sultan Ismail", "PWTC", "Majlis Jamek", 8, 0.80, 7, 8, 0.80, 7, "NearbySeeingSpot3");
-	Station* StationNode4 = createStationNode(4, "Majlis Jamek", "Sultan Ismail", "Plaza Rakyat", 8, 0.80, 7, 6, 0.60, 5, "NearbySeeingSpot4");
-	Station* StationNode5 = createStationNode(5, "Plaza Rakyat", "Majlis Jamek", "Hang Tuah", 6, 0.60, 5, 10, 1.00, 9, "NearbySeeingSpot5");
-	Station* StationNode6 = createStationNode(6, "Hang Tuah", "Plaza Rakyat", "Pudu", 10, 1.00, 9, 5, 0.50, 4, "NearbySeeingSpot6");
-	Station* StationNode7 = createStationNode(7, "Pudu", "Hang Tuah", "Chan Sow Lin", 5, 0.50, 4, 5, 0.50, 4, "NearbySeeingSpot7");
-	Station* StationNode8 = createStationNode(8, "Chan Sow Lin", "Pudu", "", 5, 0.50, 4, 0, 0, 0, "NearbySeeingSpot8");
+	Station* StationNode1 = createStationNode(1, "Titiwangsa", "", "PWTC", 0, 0, 0, 4, 0.40, 3, "Providence KL");
+	Station* StationNode2 = createStationNode(2, "PWTC", "Titiwangsa", "Sultan Ismail", 4, 0.40, 3, 8, 0.80, 7, "Sunway Putra Mall");
+	Station* StationNode3 = createStationNode(3, "Sultan Ismail", "PWTC", "Majlis Jamek", 8, 0.80, 7, 8, 0.80, 7, "Jalan Tunku Abdul Rahman");
+	Station* StationNode4 = createStationNode(4, "Majlid Jamek", "Sultan Ismail", "Plaza Rakyat", 8, 0.80, 7, 6, 0.60, 5, "Jamek Mosque");
+	Station* StationNode5 = createStationNode(5, "Plaza Rakyat", "Majlis Jamek", "Hang Tuah", 6, 0.60, 5, 10, 1.00, 9, "St. Anthony Chruch");
+	Station* StationNode6 = createStationNode(6, "Hang Tuah", "Plaza Rakyat", "Pudu", 10, 1.00, 9, 5, 0.50, 4, "Berjaya Time Square");
+	Station* StationNode7 = createStationNode(7, "Pudu", "Hang Tuah", "Chan Sow Lin", 5, 0.50, 4, 5, 0.50, 4, "Pasar Besar Pudu");
+	Station* StationNode8 = createStationNode(8, "Chan Sow Lin", "Pudu", "", 5, 0.50, 4, 0, 0, 0, "East Club");
+
+	insertStationNodeToTheEndList(StationNode8);
+	insertStationNodeToTheEndList(StationNode7);
+	insertStationNodeToTheEndList(StationNode6);
+	insertStationNodeToTheEndList(StationNode5);
+	insertStationNodeToTheEndList(StationNode4);
+	insertStationNodeToTheEndList(StationNode3);
+	insertStationNodeToTheEndList(StationNode2);
+	insertStationNodeToTheEndList(StationNode1);
 
 	while (true)
 	{
@@ -1589,15 +1605,6 @@ int main()
 
 					if (customerId != 0)
 					{
-						insertStationNodeToTheFrontList(StationNode8);
-						insertStationNodeToTheFrontList(StationNode7);
-						insertStationNodeToTheFrontList(StationNode6);
-						insertStationNodeToTheFrontList(StationNode5);
-						insertStationNodeToTheFrontList(StationNode4);
-						insertStationNodeToTheFrontList(StationNode3);
-						insertStationNodeToTheFrontList(StationNode2);
-						insertStationNodeToTheFrontList(StationNode1);
-
 						int customerDecision;
 						while (true)
 						{
