@@ -5,7 +5,6 @@
 #include<iomanip> //Make character to 2 digit
 using namespace std;
 
-
 struct Station {
 
 	int StationID;
@@ -24,7 +23,6 @@ struct Station {
 	Station* prevAdd;
 
 }*stationHead, * stationCurrent, * stationTail;
-
 
 struct Ticket {
 
@@ -46,7 +44,6 @@ struct Ticket {
 
 }*ticketHead, * ticketCurrent;
 
-
 struct Customer {
 	int CustomerId;
 	string CustomerName;
@@ -55,7 +52,6 @@ struct Customer {
 
 	Customer* nextAdd;
 }*customerHead,*customerCurrent;
-
 
 //Draw Opening
 void drawopening() {
@@ -74,7 +70,6 @@ void drawmap() {
 	cout << "    -------\\/--------\\/---------\\/--------------\\/------------\\/------------\\/--------\\/---------\\/--------" << endl;
 
 }
-
 
 // Station
 //create a Station node function
@@ -117,9 +112,6 @@ void insertStationNodeToTheEndList(Station* StationNode)
 		stationTail = StationNode;
 	}
 }
-
-
-
 
 
 //Customer Loging and Create Account
@@ -247,10 +239,6 @@ int checkCustomerLoggingAccount(string customerIcOrPassport, string customerPass
 	return 0;
 }
 
-
-
-
-
 //Generating Ticket
 //create a Ticket node function
 Ticket* createTicketNode(int transactionId, int ticketId, string TicketRoute, string departureStation, string arrivalStation, int ticketAmount,
@@ -364,10 +352,6 @@ void createTicket(string TicketRoute, string departureStation, string arrivalSta
 	}
 
 }
-
-
-
-
 
 //1) Purchase Ticket
 //List all possible arrival route
@@ -1202,7 +1186,6 @@ void printAndDeleteTransactionHistory(int customerId)
 
 }
 
-
 // Admin 1.13
 int checkTransactionIdAvailable(int transactionId)
 {
@@ -1545,14 +1528,10 @@ void editCustomerTicket()
 
 }
 
-
-
-
 int main()
 {
 	stationHead = stationTail = NULL;
 
-	
 	Station* StationNode1 = createStationNode(1, "Titiwangsa", "", "PWTC", 0, 0, 0, 4, 0.40, 3, "Providence KL");
 	Station* StationNode2 = createStationNode(2, "PWTC", "Titiwangsa", "Sultan Ismail", 4, 0.40, 3, 8, 0.80, 7, "Sunway Putra Mall");
 	Station* StationNode3 = createStationNode(3, "Sultan Ismail", "PWTC", "Majlis Jamek", 8, 0.80, 7, 8, 0.80, 7, "Jalan Tunku Abdul Rahman");
@@ -1654,26 +1633,46 @@ int main()
 					if (adminAccount == "admin" && adminPassword == "12345")
 					{
 						int decision;
-						while (true)
+						bool loop = true;
+						while (loop)
 						{
 							cout << "1) ..." << endl;
-							cout << "6) Edit specific customer ticket purchase inrformation" << endl;
+							cout << "6) Edit specific customer ticket purchase information" << endl;
 							cout << "7) Delete specific customer ticket purchase information" << endl;
+							cout << "Please enter your option: ";
 							cin >> decision;
-							if (decision == 1)
+							switch (decision)
 							{
+							case 1:
 								cout << "NANI ?" << endl;
-							}
-							else if (decision == 6)
-							{
+								break;
+							case 2:
+								cout << "NANI ?" << endl;
+								break;
+							case 3:
+								cout << "NANI ?" << endl;
+								break;
+							case 4:
+								cout << "NANI ?" << endl;
+								break;
+							case 5:
+								cout << "NANI ?" << endl;
+								break;
+							case 6:
 								editCustomerTicket();
-							}
-							else if (decision == 7)
-							{
+								break;
+							case 7:
 								int customerId;
 								cout << "Input Customer Id: " << endl;
 								cin >> customerId;
 								deletePurchaseTransaction(customerId);
+								break;
+							case 8:
+								cout << "Hello" << endl;
+								loop = false;
+								break;
+							default:
+								cout << "Invalid input" << endl;
 							}
 						}
 

@@ -1,6 +1,1 @@
-﻿  Prototypee.cpp
-C:\Users\ILLEGEAR\Desktop\DataStructureAssignment\Group11_DSTR_Assignment\Group11_DSTR_Assignment\Prototypee.cpp(757,36): warning C4244: '=': conversion from 'double' to 'int', possible loss of data
-C:\Users\ILLEGEAR\Desktop\DataStructureAssignment\Group11_DSTR_Assignment\Group11_DSTR_Assignment\Prototypee.cpp(800,28): warning C4244: '=': conversion from 'unsigned __int64' to 'int', possible loss of data
-C:\Users\ILLEGEAR\Desktop\DataStructureAssignment\Group11_DSTR_Assignment\Group11_DSTR_Assignment\Prototypee.cpp(1369,59): warning C4244: '=': conversion from 'double' to 'int', possible loss of data
-C:\Users\ILLEGEAR\Desktop\DataStructureAssignment\Group11_DSTR_Assignment\Group11_DSTR_Assignment\Prototypee.cpp(1392,59): warning C4244: '=': conversion from 'double' to 'int', possible loss of data
-  Group11_DSTR_Assignment.vcxproj -> C:\Users\ILLEGEAR\Desktop\DataStructureAssignment\Group11_DSTR_Assignment\Debug\Group11_DSTR_Assignment.exe
+﻿C:\Program Files\Microsoft Visual Studio\2022\Enterprise\MSBuild\Microsoft\VC\v170\Microsoft.CppBuild.targets(440,5): error MSB8020: The build tools for Visual Studio 2019 (Platform Toolset = 'v142') cannot be found. To build using the v142 build tools, please install Visual Studio 2019 build tools.  Alternatively, you may upgrade to the current Visual Studio tools by selecting the Project menu or right-click the solution, and then selecting "Retarget solution".
