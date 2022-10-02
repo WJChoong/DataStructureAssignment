@@ -1,0 +1,10 @@
+{
+  "files.associations": {
+    "*.rmd": "markdown",
+    "*.html": "html",
+    "iostream": "cpp",
+    "ostream": "cpp",
+    "xstring": "cpp"
+  },
+  "C_Cpp.errorSquiggles": "Disabled"
+}
