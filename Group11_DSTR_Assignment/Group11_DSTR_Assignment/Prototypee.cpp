@@ -4,6 +4,9 @@
 #include <ctime>	//Get Current Date and Time
 #include <iomanip>	//Make character to 2 digit
 #include <limits>
+#include <chrono>
+#include <thread>
+
 using namespace std;
 
 struct Station
@@ -21,10 +24,10 @@ struct Station
 	int TimeBetweenNextStation;
 	string NearbySightseeingSpots;
 
-	Station *nextAdd;
-	Station *prevAdd;
+	Station* nextAdd;
+	Station* prevAdd;
 
-} * stationHead, *stationCurrent, *stationTail;
+} *stationHead, * stationCurrent, * stationTail;
 
 int ticketCounts = 0; // calculate total tickets in the system
 struct Ticket
@@ -43,9 +46,9 @@ struct Ticket
 	string CustomerName;
 	string CustomerIcOrPassport;
 
-	Ticket *nextAdd;
+	Ticket* nextAdd;
 
-} * ticketHead, *ticketCurrent;
+} *ticketHead, * ticketCurrent;
 
 struct Customer
 {
@@ -54,8 +57,8 @@ struct Customer
 	string CustomerIcOrPassport;
 	string CustomerPassword;
 
-	Customer *nextAdd;
-} * customerHead, *customerCurrent;
+	Customer* nextAdd;
+} *customerHead, * customerCurrent;
 
 // Draw Opening
 void drawopening()
@@ -63,9 +66,9 @@ void drawopening()
 	cout << "      -------------------------------------" << endl;
 	cout << "      -------Ticket Booking System---------" << endl;
 	cout << "      -------------------------------------" << endl
-		 << endl;
+		<< endl;
 	cout << "    Welcome to Kuala Lumpur Light Rail Transit(LRT) - Titiwangsa Station - Chan Sow Lin Station Route" << endl
-		 << endl;
+		<< endl;
 }
 
 // Draw Map
@@ -77,13 +80,23 @@ void drawmap()
 	cout << "    -------\\/--------\\/---------\\/--------------\\/------------\\/------------\\/--------\\/---------\\/--------" << endl;
 }
 
+void displayMessage(string message)
+{
+	cout << endl;
+	cout << "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~" << endl;
+	cout << message << endl;
+	cout << "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~" << endl;
+	cout << endl;
+	std::this_thread::sleep_for(3000ms);
+}
+
 // Station
 // create a Station node function
-Station *createStationNode(int StationID, string StationName, string PreviousStationName, string NextStationName,
-						   double DistanceBetweenPreviousStation, double CostBetweenPreviousStation, int TimeBetweenPreviousStation,
-						   double DistanceBetweenNextStation, double CostBetweenNextStation, int TimeBetweenNextStation, string NearbySightseeingSpots)
+Station* createStationNode(int StationID, string StationName, string PreviousStationName, string NextStationName,
+	double DistanceBetweenPreviousStation, double CostBetweenPreviousStation, int TimeBetweenPreviousStation,
+	double DistanceBetweenNextStation, double CostBetweenNextStation, int TimeBetweenNextStation, string NearbySightseeingSpots)
 {
-	Station *StationNode = new Station;
+	Station* StationNode = new Station;
 	StationNode->StationID = StationID;
 	StationNode->StationName = StationName;
 	StationNode->PreviousStationName = PreviousStationName;
@@ -103,7 +116,7 @@ Station *createStationNode(int StationID, string StationName, string PreviousSta
 }
 
 // Insert Station Node to the End of the list
-void insertStationNodeToTheEndList(Station *StationNode)
+void insertStationNodeToTheEndList(Station* StationNode)
 {
 	// If the list still empty
 	if (stationHead == NULL && stationTail == NULL)
@@ -121,9 +134,9 @@ void insertStationNodeToTheEndList(Station *StationNode)
 
 // Customer Loging and Create Account
 // create a Customer node function
-Customer *createCustomerNode(int customerId, string customerName, string customerIcOrPassport, string customerPassword)
+Customer* createCustomerNode(int customerId, string customerName, string customerIcOrPassport, string customerPassword)
 {
-	Customer *CustomerNode = new Customer;
+	Customer* CustomerNode = new Customer;
 	CustomerNode->CustomerId = customerId;
 	CustomerNode->CustomerName = customerName;
 	CustomerNode->CustomerIcOrPassport = customerIcOrPassport;
@@ -134,7 +147,7 @@ Customer *createCustomerNode(int customerId, string customerName, string custome
 	return CustomerNode;
 }
 // Insert Customer Node to the End of the list
-void insertCustomerNodeToTheEndList(Customer *CustomerNode)
+void insertCustomerNodeToTheEndList(Customer* CustomerNode)
 {
 	// Situation 1: List still empty
 	if (customerHead == NULL)
@@ -183,7 +196,7 @@ int createCustomerAccount(string customerName, string customerIcOrPassport, stri
 	}
 
 	// If the customer does not exist in the system, the account will be created
-	Customer *customerNode = createCustomerNode(customerId, customerName, customerIcOrPassport, customerPassword);
+	Customer* customerNode = createCustomerNode(customerId, customerName, customerIcOrPassport, customerPassword);
 	insertCustomerNodeToTheEndList(customerNode);
 	return 1;
 }
@@ -246,11 +259,11 @@ int checkCustomerLoggingAccount(string customerIcOrPassport, string customerPass
 
 // Generating Ticket
 // create a Ticket node function
-Ticket *createTicketNode(int transactionId, int ticketId, string TicketRoute, string departureStation, string arrivalStation, int ticketAmount,
-						 string transactionDateAndTime, string departureDate, string departureTime,
-						 int totalTicketPrice, int customerId, string customerName, string customerIcOrPassport)
+Ticket* createTicketNode(int transactionId, int ticketId, string TicketRoute, string departureStation, string arrivalStation, int ticketAmount,
+	string transactionDateAndTime, string departureDate, string departureTime,
+	int totalTicketPrice, int customerId, string customerName, string customerIcOrPassport)
 {
-	Ticket *TicketNode = new Ticket;
+	Ticket* TicketNode = new Ticket;
 	TicketNode->TransactionID = transactionId;
 	TicketNode->TicketID = ticketId;
 	TicketNode->TicketRoute = TicketRoute;
@@ -270,7 +283,7 @@ Ticket *createTicketNode(int transactionId, int ticketId, string TicketRoute, st
 	return TicketNode;
 }
 // Insert Ticket Node to the Front of the lisst
-void insertTicketNodeToTheFrontList(Ticket *ticketNode)
+void insertTicketNodeToTheFrontList(Ticket* ticketNode)
 {
 	// Situation 1: List still empty
 	if (ticketHead == NULL)
@@ -351,7 +364,7 @@ void createTicket(string TicketRoute, string departureStation, string arrivalSta
 
 	for (int i = 0; i < ticketAmount; i++)
 	{
-		Ticket *ticketNode = createTicketNode(transactionId, ticketId, TicketRoute, departureStation, arrivalStation, ticketAmount, transactionDateAndTime, departureDate, departureTime, totalTicketPrice, customerId, customerName, customerIcOrPassport);
+		Ticket* ticketNode = createTicketNode(transactionId, ticketId, TicketRoute, departureStation, arrivalStation, ticketAmount, transactionDateAndTime, departureDate, departureTime, totalTicketPrice, customerId, customerName, customerIcOrPassport);
 		insertTicketNodeToTheFrontList(ticketNode);
 		ticketId = ticketId + 1;
 	}
@@ -648,11 +661,11 @@ void displayDetailsBetweenTwoSelectedCities(int route, int departure, int arriva
 	cout << "Total Distance: " << totaldistance << " KM" << endl;
 	cout << "Total Expenses per ticket: RM " << fixed << setprecision(2) << setfill('0') << totalexpenses << endl;
 	cout << "Total Time: " << totaltime << " Minutes" << endl
-		 << endl;
+		<< endl;
 
 	cout << "Departure Date: " << Year << "/" << setw(2) << setfill('0') << Month << "/" << setw(2) << setfill('0') << Days << endl;
 	cout << "Departure Time: " << setw(2) << setfill('0') << Hours << ":" << setw(2) << setfill('0') << Minutes << endl
-		 << endl;
+		<< endl;
 
 	string departureDate = to_string(Year) + "/" + to_string(Month) + "/" + to_string(Days);
 	string departureTime = to_string(Hours) + ":" + to_string(Minutes);
@@ -713,7 +726,7 @@ void displayDetailsBetweenTwoSelectedCities(int route, int departure, int arriva
 
 	cout << "Arrival Date: " << arrival_year << "/" << setw(2) << setfill('0') << arrival_month << "/" << setw(2) << setfill('0') << arrival_days << endl;
 	cout << "Estimate Arrival Time: " << setw(2) << setfill('0') << arrival_hours << ":" << setw(2) << setfill('0') << arrival_minutes << endl
-		 << endl;
+		<< endl;
 
 	string arrivalDate = to_string(arrival_year) + "/" + to_string(arrival_month) + "/" + to_string(arrival_days);
 	string arrivalTime = to_string(arrival_hours) + ":" + to_string(arrival_minutes);
@@ -854,7 +867,7 @@ void purchaseticket(int customerId)
 		cout << "7) Pudu" << endl;
 		cout << "8) Chan Sow Lin" << endl;
 		cout << "9) Return to Main Menu" << endl
-			 << endl;
+			<< endl;
 		cout << "Choose your Departure location: ";
 		cin >> departure;
 
@@ -890,7 +903,7 @@ void purchaseticket(int customerId)
 		system("CLS");
 		listAllPossibleArrivalStation(route, departure);
 		cout << "9) Return to Main Menu" << endl
-			 << endl;
+			<< endl;
 		cout << "Choose your Arrival location: ";
 		cin >> arrival;
 
@@ -1004,7 +1017,7 @@ void printStationDetails()
 	cout << "7) Pudu" << endl;
 	cout << "8) Chan Sow Lin" << endl;
 	cout << "9) Return to Main Menu" << endl
-		 << endl;
+		<< endl;
 	cin >> decision;
 
 	if (decision > 0 && decision < 9)
@@ -1081,6 +1094,7 @@ void printAllStationDetails()
 		cout << "Cost Between Next Station: " << stationCurrent->CostBetweenNextStation << endl;
 		cout << "Time Between Next Station: " << stationCurrent->TimeBetweenNextStation << endl;
 		cout << "Nearby Sightseeing Spots: " << stationCurrent->NearbySightseeingSpots << endl;
+		cout << endl;
 		stationCurrent = stationCurrent->nextAdd;
 	}
 }
@@ -1095,7 +1109,7 @@ void deletePurchaseTransaction(int customerId)
 
 	// check whehter this transaction id is in this passenger account
 	ticketCurrent = ticketHead;
-	Ticket *ticketTemp;
+	Ticket* ticketTemp;
 	while (ticketCurrent != NULL)
 	{
 		if (ticketCurrent->TransactionID == transactionId && ticketCurrent->CustomerID == customerId)
@@ -1154,7 +1168,7 @@ void printAndDeleteTransactionHistory(int customerId)
 				cout << "Departure Date: " << ticketCurrent->DepartureDate << endl;
 				cout << "Departure Time: " << ticketCurrent->DepartureTime << endl;
 				cout << "Total Ticket Price: " << ticketCurrent->TotalTicketPrice << endl
-					 << endl;
+					<< endl;
 				ticketCount++;
 			}
 			ticketCurrent = ticketCurrent->nextAdd;
@@ -1194,40 +1208,96 @@ void printAndDeleteTransactionHistory(int customerId)
 	}
 }
 
+// quick sort
+// https://www.geeksforgeeks.org/cpp-program-for-quicksort/
+void swapTicket(Ticket* arr, int start, int end)
+{
+	Ticket tempTicket = arr[start];
+	arr[start] = arr[end];
+	arr[end] = tempTicket;
+}
+int partition(Ticket arr[], int start, int end)
+{
+	Ticket pivot = arr[start];
+	int count = 0;
+	for (int i = start + 1; i <= end; i++)
+	{
+		if (arr[i].CustomerName <= pivot.CustomerName)
+			count++;
+	}
+
+	int pivotIndex = start + count;
+
+	// sorting
+	swapTicket(arr, pivotIndex, start);
+
+	int i = start, j = end;
+
+	while (i < pivotIndex && j > pivotIndex)
+	{
+		while (arr[i].CustomerName <= pivot.CustomerName)
+		{
+			i++;
+		}
+		while (arr[j].CustomerName > pivot.CustomerName)
+		{
+			j--;
+		}
+
+		if (i < pivotIndex && j > pivotIndex)
+		{
+			Ticket tempTicket = arr[i++];
+			arr[pivotIndex] = arr[start];
+			arr[start] = tempTicket;
+		}
+	}
+	return pivotIndex;
+}
+void quickSort(Ticket* arr, int start, int end)
+{
+	if (start >= end)
+		return;
+
+	int p = partition(arr, start, end);
+
+	quickSort(arr, start, p - 1);
+
+	quickSort(arr, p + 1, end);
+}
+
 // Admin 1.13
 void addNewSubwayStationInformation()
 {
-	string stationName, previousStationName, nextStationName, nearbyBySightseeingSpots;
-	double distanceBetweenPreviousStation, costBetweenPreviousStation, distanceBetweenNextStation, costBetweenNextStation;
-	int timeBetweenPreviousStation, timeBetweenNextStation;
+	// need to change
+	string stationName, previousStationName, nearbyBySightseeingSpots;
+	double distanceBetweenPreviousStation, costBetweenPreviousStation;
+	int timeBetweenPreviousStation;
 	int stationId = stationTail->StationID + 1;
 	cout << "What is the name of the station: ";
-	cin >> stationName;
-	cout << "What is the name of previous station: ";
-	cin >> previousStationName;
-	cout << "What is the name of next station: ";
-	cin >> nextStationName;
+	getline(cin >> ws, stationName);
+
+	previousStationName = stationTail->StationName;
 	cout << "What is the distance between previous station: ";
 	cin >> distanceBetweenPreviousStation;
 	cout << "What is the cost between previous station: ";
 	cin >> costBetweenPreviousStation;
 	cout << "What is the time between previous station: ";
 	cin >> timeBetweenPreviousStation;
-	cout << "What is the distance between next station: ";
-	cin >> distanceBetweenNextStation;
-	cout << "What is the cost between next station: ";
-	cin >> costBetweenNextStation;
-	cout << "What is the time between next station: ";
-	cin >> timeBetweenNextStation;
-	cout << "What is the nearby sight seeing spots: ";
-	getline(cin, nearbyBySightseeingSpots);
+	cout << "What are the nearby sight seeing spotes of the station: ";
+	getline(cin >> ws, nearbyBySightseeingSpots);
 
-	Station *newStationNode = createStationNode(stationId, stationName, previousStationName, nextStationName,
-												distanceBetweenPreviousStation, costBetweenPreviousStation,
-												timeBetweenPreviousStation, distanceBetweenNextStation, costBetweenNextStation,
-												timeBetweenNextStation, nearbyBySightseeingSpots);
-	insertStationNodeToTheEndList(newStationNode);
+	Station* tempStationNode = createStationNode(stationId, stationName, previousStationName, "",
+		distanceBetweenPreviousStation, costBetweenPreviousStation,
+		timeBetweenPreviousStation, 0.0, 0.0,
+		0, nearbyBySightseeingSpots);
+	stationTail->NextStationName = stationName;
+	stationTail->DistanceBetweenNextStation = distanceBetweenPreviousStation;
+	stationTail->CostBetweenNextStation = costBetweenPreviousStation;
+	stationTail->TimeBetweenNextStation = timeBetweenPreviousStation;
+	stationTail->nextAdd = tempStationNode;
+	printAllStationDetails();
 	cout << "The new subway station is successfully added" << endl;
+	cout << endl;
 }
 void editCurrentSubwayStationsInformation()
 {
@@ -1243,11 +1313,12 @@ void editCurrentSubwayStationsInformation()
 			subwayOption = false;
 			continue;
 		}
+
 		// if no station in dataset
 		if (stationHead == NULL)
 		{
-			cout << "There is no station for you to edit. Please add new station";
-			cout << subwayOption = false;
+			displayMessage("There is no station for you to edit. Please add new station");
+			subwayOption = false;
 			continue;
 		}
 
@@ -1266,10 +1337,13 @@ void editCurrentSubwayStationsInformation()
 		// if not found
 		if (!found)
 		{
-			cout << "Invalid stationId. Please enter the correct input";
+			displayMessage("Invalid stationId. Please enter the correct input");
 			continue;
 		}
-
+		cin.clear();
+		string name;
+		double cost;
+		int time;
 		// choose which information to edit
 		while (editOption)
 		{
@@ -1288,99 +1362,159 @@ void editCurrentSubwayStationsInformation()
 			switch (option)
 			{
 			case 1:
-				string name;
 				cout << "Please enter the new station name: ";
-				cin >> name;
+				getline(cin >> ws, name);
 				stationCurrent->StationName = name;
-				cout >> "You had successfully updated the station name" << endl;
-				cout >> endl;
+				displayMessage("You had successfully updated the station name");
+				editOption = false;
 				break;
 			case 2:
-				double cost;
 				cout << "Please enter the new cost between previous station: ";
 				cin >> cost;
-				stationCurrent->CostBetweenPreviousStation = name;
-				cout >> "You had successfully updated the cost between previous station" << endl;
-				cout >> endl;
+				stationCurrent->CostBetweenPreviousStation = cost;
+				displayMessage("You had successfully updated the cost between previous station");
+				editOption = false;
 				break;
 			case 3:
-				double cost;
 				cout << "Please enter the new cost between next station: ";
 				cin >> cost;
-				stationCurrent->CostBetweenNextStation = name;
-				cout >> "You had successfully updated the cost between next station" << endl;
-				cout >> endl;
+				stationCurrent->CostBetweenNextStation = cost;
+				displayMessage("You had successfully updated the cost between next station");
+				editOption = false;
 				break;
 			case 4:
-				int time;
 				cout << "Please enter the new time between previous station: ";
 				cin >> time;
 				stationCurrent->TimeBetweenPreviousStation = time;
-				cout >> "You had successfully updated the time between previous station" << endl;
-				cout >> endl;
+				displayMessage("You had successfully updated the time between previous station");
+				editOption = false;
 				break;
 			case 5:
-				int time;
 				cout << "Please enter the new time between next station: ";
 				cin >> time;
 				stationCurrent->TimeBetweenNextStation = time;
-				cout >> "You had successfully updated the time between next station" << endl;
-				cout >> endl;
+				displayMessage("You had successfully updated the time between next station");
+				editOption = false;
 				break;
 			case 6:
 				editOption = false;
 				break;
-			// if other inputs will considered as invalid input
+				// if other inputs will considered as invalid input
 			default:
-				cout << "Invalid option . Please enter again" << endl;
+				displayMessage("Invalid option . Please enter again");
 			}
 		}
 	}
 }
 void viewAllPurchaseTransactions()
 {
-	ticketCurrent = ticketHead;
-	while (ticketCurrent != NULL)
+	if (ticketHead == NULL)
 	{
-		cout >> "Transaction ID: " >> ticketCurrent->TransactionID >> endl;
-		cout >> "Ticket ID: " >> ticketCurrent->TicketID >> endl;
-		cout >> "Ticket Route: " >> ticketCurrent->TicketRoute >> endl;
-		cout >> "Name of The Source Station: " >> ticketCurrent->NameOfTheSourceStation >> endl;
-		cout >> "Name of The Target Station: " >> ticketCurrent->NameofTheTargetStation >> endl;
-		cout >> "Transaction Date and Time: " >> ticketCurrent->TransactionDateAndTime >> endl;
-		cout >> "Depature Date: " >> ticketCurrent->DepartureDate >> endl;
-		cout >> "Depature Time: " >> ticketCurrent->DepartureTime >> endl;
-		cout >> "Total Ticket Price: " >> ticketCurrent->TotalTicketPrice >> endl;
-		cout >> "Customer ID: " >> ticketCurrent->Customer ID >> endl;
-		cout >> "Customer Name: " >> ticketCurrent->Name >> endl;
-		cout >> "Customer IC / Passport: " >> ticketCurrent->CustomerIcOrPassport >> endl;
-		ticketCurrent = ticketCurrent->nextAdd;
+		displayMessage("There is no transaction record!");
 	}
-	cout >> "This is the end of the purchase transaction" >> endl;
+	else
+	{
+		ticketCurrent = ticketHead;
+		while (ticketCurrent != NULL)
+		{
+			cout << "Transaction ID: " << ticketCurrent->TransactionID << endl;
+			cout << "Ticket ID: " << ticketCurrent->TicketID << endl;
+			cout << "Ticket Route: " << ticketCurrent->TicketRoute << endl;
+			cout << "Name of The Source Station: " << ticketCurrent->NameOfTheSourceStation << endl;
+			cout << "Name of The Target Station: " << ticketCurrent->NameofTheTargetStation << endl;
+			cout << "Transaction Date and Time: " << ticketCurrent->TransactionDateAndTime << endl;
+			cout << "Depature Date: " << ticketCurrent->DepartureDate << endl;
+			cout << "Depature Time: " << ticketCurrent->DepartureTime << endl;
+			cout << "Total Ticket Price: " << ticketCurrent->TotalTicketPrice << endl;
+			cout << "Customer ID: " << ticketCurrent->CustomerID << endl;
+			cout << "Customer Name: " << ticketCurrent->CustomerName << endl;
+			cout << "Customer IC / Passport: " << ticketCurrent->CustomerIcOrPassport << endl;
+			ticketCurrent = ticketCurrent->nextAdd;
+		}
+		displayMessage("This is the end of the purchase transaction");
+	}
 }
 void sortPurchaseTransaction()
 {
 	ticketCurrent = ticketHead;
-	Ticket ticketArray[ticketCounts] = {};
+	// error
+	Ticket* ticketArray = new Ticket[ticketCounts];
 	int index = 0;
 	while (ticketCurrent != NULL)
 	{
-		Ticket *tempNode = createTicketNode(ticketCurrent->TransactionID,
-											ticketCurrent->TicketID,
-											ticketCurrent->TicketRoute,
-											ticketCurrent->NameOfTheSourceStation,
-											ticketCurrent->NameofTheTargetStation,
-											ticketCurrent->TicketAmount,
-											ticketCurrent->TransactionDateAndTime,
-											ticketCurrent->DepartureDate,
-											ticketCurrent->DepartureTime,
-											ticketCurrent->TotalTicketPrice,
-											ticketCurrent->CustomerID,
-											ticketCurrent->CustomerName,
-											ticketCurrent->CustomerIcOrPassport)
+		Ticket* tempNode = createTicketNode(ticketCurrent->TransactionID,
+			ticketCurrent->TicketID,
+			ticketCurrent->TicketRoute,
+			ticketCurrent->NameOfTheSourceStation,
+			ticketCurrent->NameofTheTargetStation,
+			ticketCurrent->TicketAmount,
+			ticketCurrent->TransactionDateAndTime,
+			ticketCurrent->DepartureDate,
+			ticketCurrent->DepartureTime,
+			ticketCurrent->TotalTicketPrice,
+			ticketCurrent->CustomerID,
+			ticketCurrent->CustomerName,
+			ticketCurrent->CustomerIcOrPassport);
+		ticketArray[index] = *tempNode;
+		delete tempNode;
+	}
+	quickSort(ticketArray, 0, ticketCounts);
+
+	for (int i = 0; i < ticketCounts; i++)
+	{
+		cout << "Transaction ID: " << ticketArray[i].TransactionID << endl;
+		cout << "Ticket ID: " << ticketArray[i].TicketID << endl;
+		cout << "Ticket Route: " << ticketArray[i].TicketRoute << endl;
+		cout << "Name of the Source Station: " << ticketArray[i].NameOfTheSourceStation << endl;
+		cout << "Name of the Target Station: " << ticketArray[i].NameofTheTargetStation << endl;
+		cout << "Ticket Amount: " << ticketArray[i].TicketAmount << endl;
+		cout << "Transaction Date and Time: " << ticketArray[i].TransactionDateAndTime << endl;
+		cout << "Depature Date: " << ticketArray[i].DepartureDate << endl;
+		cout << "Depature Time: " << ticketArray[i].DepartureTime << endl;
+		cout << "Total Ticket Price: " << ticketArray[i].TotalTicketPrice << endl;
+		cout << "Customer ID: " << ticketArray[i].CustomerID << endl;
+		cout << "Customer Name: " << ticketArray[i].CustomerName << endl;
+		cout << "Customer IC or Passport: " << ticketArray[i].CustomerIcOrPassport << endl;
+	}
+	cout << "The above is the sorted transaction order " << endl;
+}
+void searchPurchaseCustomerTicketPurchaseInformation()
+{
+	int ID;
+	bool status = false;
+	cout << "Please enter the ticket ID: ";
+	cin >> ID;
+	ticketCurrent = ticketHead;
+	while (ticketCurrent != NULL)
+	{
+		if (ticketCurrent->TicketID == ID)
+		{
+			cout << "Transaction ID: " << ticketCurrent->TransactionID << endl;
+			cout << "Ticket ID: " << ticketCurrent->TicketID << endl;
+			cout << "Ticket Route: " << ticketCurrent->TicketRoute << endl;
+			cout << "Name of The Source Station: " << ticketCurrent->NameOfTheSourceStation << endl;
+			cout << "Name of The Target Station: " << ticketCurrent->NameofTheTargetStation << endl;
+			cout << "Transaction Date and Time: " << ticketCurrent->TransactionDateAndTime << endl;
+			cout << "Depature Date: " << ticketCurrent->DepartureDate << endl;
+			cout << "Depature Time: " << ticketCurrent->DepartureTime << endl;
+			cout << "Total Ticket Price: " << ticketCurrent->TotalTicketPrice << endl;
+			cout << "Customer ID: " << ticketCurrent->CustomerID << endl;
+			cout << "Customer Name: " << ticketCurrent->CustomerName << endl;
+			cout << "Customer IC / Passport: " << ticketCurrent->CustomerIcOrPassport << endl;
+			status = true;
+			break;
+		}
+		ticketCurrent = ticketCurrent->nextAdd;
+	}
+	if (status)
+	{
+		cout << "The specific customer ticket purchase information is found." << endl;
+	}
+	else
+	{
+		cout << "The specific customer ticket purchase information is not found." << endl;
 	}
 }
-void searchPurchaseCustomerTicketPurchaseInformation() {}
 int checkTransactionIdAvailable(int transactionId)
 {
 	ticketCurrent = ticketHead;
@@ -1458,7 +1592,7 @@ void editCustomerTicket()
 		cout << "7) Pudu" << endl;
 		cout << "8) Chan Sow Lin" << endl;
 		cout << "9) Return to Main Menu" << endl
-			 << endl;
+			<< endl;
 		cout << "Choose your Departure location: ";
 		cin >> departure;
 
@@ -1496,7 +1630,7 @@ void editCustomerTicket()
 			system("CLS");
 			listAllPossibleArrivalStation(route, departure);
 			cout << "9) Return to Main Menu" << endl
-				 << endl;
+				<< endl;
 			cout << "Choose your Arrival location: ";
 			cin >> arrival;
 
@@ -1716,14 +1850,14 @@ int main()
 {
 	stationHead = stationTail = NULL;
 
-	Station *StationNode1 = createStationNode(1, "Titiwangsa", "", "PWTC", 0, 0, 0, 4, 0.40, 3, "Providence KL");
-	Station *StationNode2 = createStationNode(2, "PWTC", "Titiwangsa", "Sultan Ismail", 4, 0.40, 3, 8, 0.80, 7, "Sunway Putra Mall");
-	Station *StationNode3 = createStationNode(3, "Sultan Ismail", "PWTC", "Majlis Jamek", 8, 0.80, 7, 8, 0.80, 7, "Jalan Tunku Abdul Rahman");
-	Station *StationNode4 = createStationNode(4, "Majlid Jamek", "Sultan Ismail", "Plaza Rakyat", 8, 0.80, 7, 6, 0.60, 5, "Jamek Mosque");
-	Station *StationNode5 = createStationNode(5, "Plaza Rakyat", "Majlis Jamek", "Hang Tuah", 6, 0.60, 5, 10, 1.00, 9, "St. Anthony Chruch");
-	Station *StationNode6 = createStationNode(6, "Hang Tuah", "Plaza Rakyat", "Pudu", 10, 1.00, 9, 5, 0.50, 4, "Berjaya Time Square");
-	Station *StationNode7 = createStationNode(7, "Pudu", "Hang Tuah", "Chan Sow Lin", 5, 0.50, 4, 5, 0.50, 4, "Pasar Besar Pudu");
-	Station *StationNode8 = createStationNode(8, "Chan Sow Lin", "Pudu", "", 5, 0.50, 4, 0, 0, 0, "East Club");
+	Station* StationNode1 = createStationNode(1, "Titiwangsa", "", "PWTC", 0, 0, 0, 4, 0.40, 3, "Providence KL");
+	Station* StationNode2 = createStationNode(2, "PWTC", "Titiwangsa", "Sultan Ismail", 4, 0.40, 3, 8, 0.80, 7, "Sunway Putra Mall");
+	Station* StationNode3 = createStationNode(3, "Sultan Ismail", "PWTC", "Majlis Jamek", 8, 0.80, 7, 8, 0.80, 7, "Jalan Tunku Abdul Rahman");
+	Station* StationNode4 = createStationNode(4, "Majlid Jamek", "Sultan Ismail", "Plaza Rakyat", 8, 0.80, 7, 6, 0.60, 5, "Jamek Mosque");
+	Station* StationNode5 = createStationNode(5, "Plaza Rakyat", "Majlis Jamek", "Hang Tuah", 6, 0.60, 5, 10, 1.00, 9, "St. Anthony Chruch");
+	Station* StationNode6 = createStationNode(6, "Hang Tuah", "Plaza Rakyat", "Pudu", 10, 1.00, 9, 5, 0.50, 4, "Berjaya Time Square");
+	Station* StationNode7 = createStationNode(7, "Pudu", "Hang Tuah", "Chan Sow Lin", 5, 0.50, 4, 5, 0.50, 4, "Pasar Besar Pudu");
+	Station* StationNode8 = createStationNode(8, "Chan Sow Lin", "Pudu", "", 5, 0.50, 4, 0, 0, 0, "East Club");
 
 	insertStationNodeToTheEndList(StationNode1);
 	insertStationNodeToTheEndList(StationNode2);
