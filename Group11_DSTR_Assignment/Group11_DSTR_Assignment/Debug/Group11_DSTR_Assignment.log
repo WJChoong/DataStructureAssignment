@@ -1,5 +1,7 @@
 ﻿  Prototypee.cpp
-C:\Users\ILLEGEAR\Desktop\DataStructureAssignment\Group11_DSTR_Assignment\Group11_DSTR_Assignment\Prototypee.cpp(1037,28): warning C4244: '=': conversion from 'unsigned __int64' to 'int', possible loss of data
-C:\Users\ILLEGEAR\Desktop\DataStructureAssignment\Group11_DSTR_Assignment\Group11_DSTR_Assignment\Prototypee.cpp(1722): warning C4715: 'getStationId': not all control paths return a value
-C:\Users\ILLEGEAR\Desktop\DataStructureAssignment\Group11_DSTR_Assignment\Group11_DSTR_Assignment\Prototypee.cpp(1738): warning C4715: 'getStationName': not all control paths return a value
+C:\Users\ILLEGEAR\Desktop\DataStructureAssignment\Group11_DSTR_Assignment\Group11_DSTR_Assignment\Prototypee.cpp(1031,28): warning C4244: '=': conversion from 'unsigned __int64' to 'int', possible loss of data
+C:\Users\ILLEGEAR\Desktop\DataStructureAssignment\Group11_DSTR_Assignment\Group11_DSTR_Assignment\Prototypee.cpp(1802,21): warning C4244: '=': conversion from 'double' to 'int', possible loss of data
+C:\Users\ILLEGEAR\Desktop\DataStructureAssignment\Group11_DSTR_Assignment\Group11_DSTR_Assignment\Prototypee.cpp(1807,21): warning C4244: '=': conversion from 'double' to 'int', possible loss of data
+C:\Users\ILLEGEAR\Desktop\DataStructureAssignment\Group11_DSTR_Assignment\Group11_DSTR_Assignment\Prototypee.cpp(1718): warning C4715: 'getStationId': not all control paths return a value
+C:\Users\ILLEGEAR\Desktop\DataStructureAssignment\Group11_DSTR_Assignment\Group11_DSTR_Assignment\Prototypee.cpp(1734): warning C4715: 'getStationName': not all control paths return a value
   Group11_DSTR_Assignment.vcxproj -> C:\Users\ILLEGEAR\Desktop\DataStructureAssignment\Group11_DSTR_Assignment\Debug\Group11_DSTR_Assignment.exe

@@ -88,14 +88,6 @@ void drawopening()
 	cout << "    Welcome to Kuala Lumpur Light Rail Transit(LRT) - Titiwangsa Station - Chan Sow Lin Station Route" << endl
 		<< endl;
 }
-// Draw Map
-void drawmap()
-{
-
-	cout << "       Titiwangsa     PWTC   Sultan Ismail    Majils Jamek    Plaza Rakyat    Hang Tuah    Pudu     Chan Sow Lin" << endl;
-	cout << "    -------/\\--------/\\---------/\\--------------/\\------------/\\------------/\\--------/\\---------/\\--------" << endl;
-	cout << "    -------\\/--------\\/---------\\/--------------\\/------------\\/------------\\/--------\\/---------\\/--------" << endl;
-}
 void displayMessage(string message)
 {
 	cout << endl;
@@ -307,7 +299,7 @@ string checkCustomerLoggingAccount(string customerIcOrPassport, string customerP
 	{
 		cout << "This system has no customer account" << endl;
 		system("pause");
-		return 0;
+		return "";
 	}
 	// If there is only one account exists in this system
 	else if (customerHead->nextAdd == NULL)
@@ -325,7 +317,7 @@ string checkCustomerLoggingAccount(string customerIcOrPassport, string customerP
 			{
 				cout << "Incorrect Password. " << endl;
 				system("pause");
-				return 0;
+				return "";
 			}
 		}
 	}
@@ -347,7 +339,7 @@ string checkCustomerLoggingAccount(string customerIcOrPassport, string customerP
 				else
 				{
 					cout << "Incorrect Password. " << endl;
-					return 0;
+					return "";
 				}
 			}
 		}
@@ -2422,13 +2414,14 @@ int main()
 		cout << "1) Login to existing account" << endl;
 		cout << "2) Create a new account as passenger" << endl;
 		cout << "3) Exit system" << endl;
-		cout << "Select your decision: " << endl;
+		cout << "Select your decision: ";
 		cin >> decision;
 
 		if (decision == 1)
 		{
 			while (true)
 			{
+				system("CLS");
 				int role;
 				cout << "1) Passenger" << endl;
 				cout << "2) Admin" << endl;
@@ -2439,11 +2432,12 @@ int main()
 				// Passenger
 				if (role == 1)
 				{
+					system("CLS");
 					string customerAccount;
 					string customerPassword;
-					cout << "Please Enter your IC or Passport Number" << endl;
+					cout << "Please Enter your IC or Passport Number: ";
 					cin >> customerAccount;
-					cout << "Please Enter your Password" << endl;
+					cout << "Please Enter your Password: ";
 					cin >> customerPassword;
 
 					string customerId = checkCustomerLoggingAccount(customerAccount, customerPassword);
@@ -2554,6 +2548,7 @@ int main()
 					cin.clear();										 // remove the input operation
 					cin.ignore(numeric_limits<streamsize>::max(), '\n'); // remove content
 					cout << "Invalid Format" << endl;
+					system("pause");
 				}
 			}
 		}
