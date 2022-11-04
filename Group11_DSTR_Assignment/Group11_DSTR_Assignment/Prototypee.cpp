@@ -35,12 +35,13 @@ struct Station
 	Station* prevAdd; // Linked List - Address of Previous Node
 
 } *stationHead, * stationCurrent, * stationTail;
+
 int ticketCounts = 0; // calculate total tickets in the system
 struct Ticket
 {
 	//Ticket Details
-	string TransactionID; // (Transaction ID Starting from T001, auto increment)
-	string TicketID; // (Ticket ID Starting from K001, auto increment)
+	string TransactionID; 		// (Transaction ID Starting from T000, auto increment)
+	string TicketID; 			// (Ticket ID Starting from K000, auto increment)
 	string TicketRoute;
 	string NameOfTheSourceStation;
 	string NameofTheTargetStation;
@@ -49,14 +50,15 @@ struct Ticket
 	string DepartureDate;
 	string DepartureTime;
 	double TotalTicketPrice;
-	string CustomerID; // (Customer ID Starting from C001, auto increament when new account is created)
+	string CustomerID; 			// (Customer ID Starting from C000, auto increament when new account is created)
 	string CustomerName;
 	string CustomerIcOrPassport;
 
 	//Ticket Node Address
 	Ticket* nextAdd; // Linked List - Address of Next Node
 
-} *ticketHead, * ticketCurrent, *ticketTail;
+} *ticketHead, * ticketCurrent, * ticketTail;
+
 struct Customer
 {
 	// Customer Details
@@ -81,13 +83,14 @@ struct Customer
 // Draw Opening
 void drawopening()
 {
-	cout << "      -------------------------------------" << endl;
-	cout << "      -------Ticket Booking System---------" << endl;
-	cout << "      -------------------------------------" << endl
+	cout << "-------------------------------------" << endl;
+	cout << "-------Ticket Booking System---------" << endl;
+	cout << "-------------------------------------" << endl
 		<< endl;
-	cout << "    Welcome to Kuala Lumpur Light Rail Transit(LRT) - Titiwangsa Station - Chan Sow Lin Station Route" << endl
+	cout << "Welcome to Kuala Lumpur Light Rail Transit(LRT) - Titiwangsa Station - Chan Sow Lin Station Route" << endl
 		<< endl;
 }
+
 void displayMessage(string message)
 {
 	cout << endl;
@@ -141,11 +144,12 @@ int idExtract(string ID)
 
 	return number;
 }
-string idMaker(string idType,int ID)
+
+string idMaker(string idType, int ID)
 {
 	string LeadingZero;
 	string id = idType;
-	
+
 	int test;
 	test = ID - 10;
 
@@ -200,6 +204,7 @@ Station* createStationNode(string StationID, string StationName, string Previous
 
 	return StationNode;
 }
+
 // Insert Station Node to the End of the list
 void insertStationNodeToTheEndList(Station* StationNode)
 {
@@ -239,6 +244,7 @@ Customer* createCustomerNode(string customerId, string customerName, string cust
 
 	return CustomerNode;
 }
+
 // Insert Customer Node to the End of the list
 void insertCustomerNodeToTheEndList(Customer* CustomerNode)
 {
@@ -255,6 +261,7 @@ void insertCustomerNodeToTheEndList(Customer* CustomerNode)
 		customerTail = CustomerNode;
 	}
 }
+
 // Check Customer Account when Creating a new Customer Account
 int createCustomerAccount(string customerName, string customerIcOrPassport, string customerPassword)
 {
@@ -291,13 +298,14 @@ int createCustomerAccount(string customerName, string customerIcOrPassport, stri
 	insertCustomerNodeToTheEndList(customerNode);
 	return 1;
 }
+
 // Check Customer Account and password when logging
 string checkCustomerLoggingAccount(string customerIcOrPassport, string customerPassword)
 {
 	// If there is no account exists in this system
 	if (customerHead == NULL)
 	{
-		cout << "This system has no customer account" << endl;
+		cout << "This system currently does not have any passenger account registered." << endl;
 		system("pause");
 		return "";
 	}
@@ -310,12 +318,12 @@ string checkCustomerLoggingAccount(string customerIcOrPassport, string customerP
 
 			if (customerHead->CustomerPassword == customerPassword)
 			{
-				cout << "Welcome Mr/Mrs " << customerHead->CustomerName << endl;
+				cout << "Welcome Mr/Mrs/Miss " << customerHead->CustomerName << endl;
 				return customerHead->CustomerId;
 			}
 			else
 			{
-				cout << "Incorrect Password. " << endl;
+				cout << "----- Incorrect Password -----" << endl;
 				system("pause");
 				return "";
 			}
@@ -333,18 +341,18 @@ string checkCustomerLoggingAccount(string customerIcOrPassport, string customerP
 			{
 				if (customerCurrent->CustomerPassword == customerPassword)
 				{
-					cout << "Welcome Mr/Mrs " << customerCurrent->CustomerName << endl;
+					cout << "Welcome Mr/Mrs/Miss " << customerCurrent->CustomerName << endl;
 					return customerCurrent->CustomerId;
 				}
 				else
 				{
-					cout << "Incorrect Password. " << endl;
+					cout << "----- Incorrect Password -----" << endl;
 					return "";
 				}
 			}
 		}
 	}
-	cout << "This IC or Passport Number does not exist in this system, Please create a new account." << endl;
+	cout << "This IC or Passport Number Does Not Exist In This System! Please Create A New Account!" << endl;
 	system("pause");
 	return "";
 }
@@ -382,8 +390,9 @@ Ticket* createTicketNode(string transactionId, string ticketId, string TicketRou
 
 	return TicketNode;
 }
+
 // Insert Ticket Node to the Front of the list
-void insertTicketNodeToTheEndList(Ticket* ticketNode) 
+void insertTicketNodeToTheEndList(Ticket* ticketNode)
 {
 	// Situation 1: List still empty
 	if (ticketHead == NULL)
@@ -399,38 +408,26 @@ void insertTicketNodeToTheEndList(Ticket* ticketNode)
 	}
 	ticketCounts++;
 }
+
 // Create Ticket
 void createTicket(string TicketRoute, string departureStation, string arrivalStation, string departureDate, string departureTime, int ticketAmount, double totalTicketPrice, string customerId)
 {
 	// get newest transaction id and ticket id
-	int transactionIdno = 0;
-	int ticketIdno = 0;
+	int transactionIdno;
+	int ticketIdno;
+
 	if (ticketHead == NULL)
 	{
-		transactionIdno = 1;
-		ticketIdno = 1;
+		transactionIdno = 0;
+		ticketIdno = 0;
 	}
 	else
 	{
-		ticketCurrent = ticketHead;
-		while (ticketCurrent != NULL)
-		{
-			// Generating Transaction ID
-			if (idExtract(ticketCurrent->TransactionID) > transactionIdno)
-			{
-				transactionIdno = idExtract(ticketCurrent->TransactionID) + 1;
-			}
-			// Geneating Ticket ID
-			if (idExtract(ticketCurrent->TicketID) > ticketIdno)
-			{
-				ticketIdno = idExtract(ticketCurrent->TicketID) + 1;
-			}
-			ticketCurrent = ticketCurrent->nextAdd;
-		}
+		transactionIdno = idExtract(ticketTail->TransactionID) + 1;
+		ticketIdno = idExtract(ticketTail->TicketID) + 1;
 	}
 
 	string transactionId = idMaker("T", transactionIdno);
-	string ticketId = idMaker("K", ticketIdno);
 
 
 
@@ -446,7 +443,7 @@ void createTicket(string TicketRoute, string departureStation, string arrivalSta
 	int Mins = newtime.tm_min;
 
 	string transactionDateAndTime = to_string(Year) + "/" + to_string(Month) + "/" + to_string(Day) + " " + to_string(Hours) + ":" + to_string(Mins);
-	
+
 	// Get Customer Name and IC/Passport
 	string customerName;
 	string customerIcOrPassport;
@@ -468,7 +465,7 @@ void createTicket(string TicketRoute, string departureStation, string arrivalSta
 
 	for (int i = 0; i < ticketAmount; i++)
 	{
-		Ticket* ticketNode = createTicketNode(transactionId, ticketId, TicketRoute, departureStation, arrivalStation, ticketAmount, transactionDateAndTime, departureDate, departureTime, totalTicketPrice, customerId, customerName, customerIcOrPassport);
+		Ticket* ticketNode = createTicketNode(transactionId, idMaker("K", ticketIdno + i), TicketRoute, departureStation, arrivalStation, ticketAmount, transactionDateAndTime, departureDate, departureTime, totalTicketPrice, customerId, customerName, customerIcOrPassport);
 		insertTicketNodeToTheEndList(ticketNode);
 	}
 }
@@ -481,17 +478,17 @@ void createTicket(string TicketRoute, string departureStation, string arrivalSta
 //-----------------   Customer  ----------------------
 //----------------------------------------------------
 
-//List route
+//List Route
 int listRoute()
 {
 	int route;
-	cout << "1) " << stationHead->StationName << " -> " << stationTail->StationName << endl;
-	cout << "2) " << stationHead->StationName << " <- " << stationTail->StationName << endl;
-	cout << "3) Return to main menu" << endl;
-	cout << "Select your route: " << endl;
-
 	while (true)
 	{
+		cout << "1) " << stationHead->StationName << " -> " << stationTail->StationName << endl;
+		cout << "2) " << stationHead->StationName << " <- " << stationTail->StationName << endl;
+		cout << "3) Return To Main Menu" << endl;
+		cout << "Select Your Route: " << endl;
+
 		cin >> route;
 		if (route == 3)
 		{
@@ -503,13 +500,15 @@ int listRoute()
 		}
 		else
 		{
-			cin.clear();										 // remove the input operation
+			cin.clear();                                         // remove the input operation
 			cin.ignore(numeric_limits<streamsize>::max(), '\n'); // remove content
-			cout << "Incorrect Input" << endl;
+			cout << "----- Incorrect Input -----" << endl;
 			system("pause");
+			system("CLS");
 		}
 	}
 }
+
 //List Departure
 int listAllPossibleDeparture(int route)
 {
@@ -536,11 +535,12 @@ int listAllPossibleDeparture(int route)
 		}
 	}
 
-	cout << totalNumberofStation << ") Return to Main menu" << endl;
+	cout << totalNumberofStation << ") Return to Main Menu" << endl;
 
 	int departure;
 	while (true)
 	{
+		cout << "\nChoose Your Departure Location: ";
 		cin >> departure;
 		if (departure > 0 && departure < totalNumberofStation)
 		{
@@ -551,9 +551,9 @@ int listAllPossibleDeparture(int route)
 			case 2:
 				return departure + 1;
 			}
-			
+
 		}
-		else if(departure == totalNumberofStation)
+		else if (departure == totalNumberofStation)
 		{
 			return 0;
 		}
@@ -561,15 +561,13 @@ int listAllPossibleDeparture(int route)
 		{
 			cin.clear();										 // remove the input operation
 			cin.ignore(numeric_limits<streamsize>::max(), '\n'); // remove content
-			cout << "Incorrect Input" << endl;
+			cout << "----- Incorrect Input -----" << endl;
 			system("pause");
 		}
 	}
-
-	
-
 }
-// List all possible arrival route
+
+// List All Possible Arrival Routes
 int listAllPossibleArrivalStation(int route, int departure)
 {
 	int totalNumberofStation = idExtract(stationTail->StationID);
@@ -605,11 +603,12 @@ int listAllPossibleArrivalStation(int route, int departure)
 		}
 	}
 
-	cout << lastSelection << ") Return to main menu" << endl;
+	cout << lastSelection << ") Return to Main Menu" << endl;
 
 	int arrival;
 	while (true)
 	{
+		cout << "\nChoose Your Arrival Location: ";
 		cin >> arrival;
 
 		if (arrival > 0 && arrival < lastSelection)
@@ -630,11 +629,12 @@ int listAllPossibleArrivalStation(int route, int departure)
 		{
 			cin.clear();										 // remove the input operation
 			cin.ignore(numeric_limits<streamsize>::max(), '\n'); // remove content
-			cout << "Incorrect Input" << endl;
+			cout << "----- Incorrect Input -----" << endl;
 			system("pause");
 		}
 	}
 }
+
 // Date Validator
 int isValidDate(int DepartureYear, int DepartureMonth, int DepartureDay)
 {
@@ -648,7 +648,7 @@ int isValidDate(int DepartureYear, int DepartureMonth, int DepartureDay)
 	int CurrentDay = newtime.tm_mday;
 
 	// Check Departure Year, month and day are in the within range
-	if (DepartureYear > 2025 || DepartureYear < 2022)
+	if (DepartureYear > 2025)
 	{
 		return 0;
 	}
@@ -687,6 +687,10 @@ int isValidDate(int DepartureYear, int DepartureMonth, int DepartureDay)
 		return 2;
 	}
 
+	if (DepartureYear < CurrentYear) {
+		return 4;
+	}
+
 	// Check Date is past or Not
 	if (DepartureYear == CurrentYear)
 	{
@@ -710,6 +714,7 @@ int isValidDate(int DepartureYear, int DepartureMonth, int DepartureDay)
 
 	return 6;
 }
+
 // List all possible Departure Time
 string listAllPossibleDepartureTime(int route, int departure, int todaydate)
 {
@@ -805,15 +810,14 @@ string listAllPossibleDepartureTime(int route, int departure, int todaydate)
 	while (true)
 	{
 		int DepartureTimeIndex;
-		cout << "Select your departure time" << endl;
-		cout << "Select (0) to return to main menu" << endl;
+		cout << "Select Your Departure Time Or Enter (0) To Return Back To Main Menu: " << endl;
 		cin >> DepartureTimeIndex;
 
 		if (cin.fail() || DepartureTimeIndex > size || DepartureTimeIndex < 0)
 		{
 			cin.clear();										 // remove the input operation
 			cin.ignore(numeric_limits<streamsize>::max(), '\n'); // remove content
-			cout << "Invalid input" << endl;
+			cout << "----- Invalid Input -----" << endl;
 		}
 		else if (DepartureTimeIndex == 0)
 		{
@@ -832,6 +836,7 @@ string listAllPossibleDepartureTime(int route, int departure, int todaydate)
 		}
 	}
 }
+
 // Display Ticket Details
 void displayDetailsBetweenTwoSelectedCities(int route, int departure, int arrival, int Year, int Month, int Days, int Hours, int Minutes, string customerId)
 {
@@ -890,17 +895,43 @@ void displayDetailsBetweenTwoSelectedCities(int route, int departure, int arriva
 		arrivalStation = stationCurrent->StationName;
 		cout << "Arrival Station: " << arrivalStation << endl;
 	}
-	cout << "Total Distance: " << totaldistance << " KM" << endl;
-	cout << "Total Expenses per ticket: RM " << fixed << setprecision(2) << setfill('0') << totalexpenses << endl;
-	cout << "Total Time: " << totaltime << " Minutes" << endl
-		<< endl;
+	cout << "\nTotal Distance: " << totaldistance << " KM" << endl;
+	cout << "Total Expenses Per Ticket: RM " << fixed << setprecision(2) << setfill('0') << totalexpenses << endl;
+	cout << "Total Time: " << totaltime << " Minutes" << endl << endl;
 
 	cout << "Departure Date: " << Year << "/" << setw(2) << setfill('0') << Month << "/" << setw(2) << setfill('0') << Days << endl;
-	cout << "Departure Time: " << setw(2) << setfill('0') << Hours << ":" << setw(2) << setfill('0') << Minutes << endl
-		<< endl;
+	cout << "Departure Time: " << setw(2) << setfill('0') << Hours << ":" << setw(2) << setfill('0') << Minutes << endl << endl;
 
 	string departureDate = to_string(Year) + "/" + to_string(Month) + "/" + to_string(Days);
-	string departureTime = to_string(Hours) + ":" + to_string(Minutes);
+	string departureTime;
+
+	int timecheck;
+	string letterHour;
+	string letterMinute;
+
+	timecheck = Hours - 10;
+	if (timecheck < 0)
+	{
+		letterHour = "0" + to_string(Hours);
+	}
+	else
+	{
+		letterHour = to_string(Hours);
+	}
+
+	timecheck = Minutes - 10;
+	if (timecheck < 0)
+	{
+		letterMinute = "0" + to_string(Minutes);
+	}
+	else
+	{
+		letterMinute = to_string(Minutes);
+	}
+
+	departureTime = letterHour + ":" + letterMinute;
+
+
 
 	int arrival_year = Year;
 	int arrival_month = Month;
@@ -960,46 +991,43 @@ void displayDetailsBetweenTwoSelectedCities(int route, int departure, int arriva
 	cout << "Estimate Arrival Time: " << setw(2) << setfill('0') << arrival_hours << ":" << setw(2) << setfill('0') << arrival_minutes << endl
 		<< endl;
 
-	string arrivalDate = to_string(arrival_year) + "/" + to_string(arrival_month) + "/" + to_string(arrival_days);
-	string arrivalTime = to_string(arrival_hours) + ":" + to_string(arrival_minutes);
 
 	int ticketAmount;
 	double totalTicketPrice = 0;
 
 	while (true)
 	{
-		cout << "Please input your ticket amount: " << endl;
-		cout << "Press 0 is to return main menu: " << endl;
-		cout << "Ticket amount: " << endl;
+		cout << "--- Please input your ticket amount or Press 0 to return back to main menu ---" << endl;
+		cout << "Ticket Amount: " << endl;
 		cin >> ticketAmount;
 
-		if (ticketAmount < 1)
+		if (cin.fail() || ticketAmount < 0)
+		{
+			cin.clear();                                         // remove the input operation
+			cin.ignore(numeric_limits<streamsize>::max(), '\n'); // remove content
+			cout << "----- Invalid Input -----" << endl;
+		}
+		else if (ticketAmount == 0)
 		{
 			return;
 		}
-		else if (ticketAmount > 0)
+		else
 		{
 			totalTicketPrice = ticketAmount * totalexpenses;
 			break;
-		}
-		else
-		{
-			cin.clear();										 // remove the input operation
-			cin.ignore(numeric_limits<streamsize>::max(), '\n'); // remove content
-			cout << "Invalid Input" << endl;
 		}
 	}
 
 
 
-	cout << "Total ticket price is: RM " << fixed << setprecision(2) << setfill('0') << totalTicketPrice << endl;
+	cout << "Total Ticket Price: RM " << fixed << setprecision(2) << setfill('0') << totalTicketPrice << endl;
 
-	
+
 
 	int confirmPurchase;
 	while (true)
 	{
-		cout << "Confirm Puchase? " << endl;
+		cout << "Confirm Purchase? " << endl;
 		cout << "1)Yes     2)No " << endl;
 		cin >> confirmPurchase;
 
@@ -1009,14 +1037,14 @@ void displayDetailsBetweenTwoSelectedCities(int route, int departure, int arriva
 		}
 		else if (confirmPurchase == 2)
 		{
-			cout << "Returning to main menu" << endl;
+			cout << "----- Returning to Main Menu -----" << endl;
 			return;
 		}
 		else
 		{
 			cin.clear();										 // remove the input operation
 			cin.ignore(numeric_limits<streamsize>::max(), '\n'); // remove content
-			cout << "Invalid Input" << endl;
+			cout << "----- Invalid Input -----" << endl;
 		}
 	}
 
@@ -1025,28 +1053,26 @@ void displayDetailsBetweenTwoSelectedCities(int route, int departure, int arriva
 		unsigned long long int creditCardNumber;
 		int CVV;
 		int valid;
-		cout << "Please input your Credit Card Number (16 digits): ";
+		cout << "Please Input Your Credit Card Number (16 digits): ";
 		cin >> creditCardNumber;
 
-		valid = creditCardNumber / 1000000000000000;
-		cout << valid;
+		valid = creditCardNumber / 1000000000000000;                                                            // CHANGE!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!FELICIA
 		if (cin.fail() || valid < 1 || valid > 9)
 		{
 			cin.clear();										 // remove the input operation
 			cin.ignore(numeric_limits<streamsize>::max(), '\n'); // remove content
-			cout << "Invalid Credit Card number" << endl;
+			cout << "----- Invalid Credit Card number -----" << endl;
 			continue;
 		}
-		cout << "Please input your CVV Number (3 digits): ";
+		cout << "Please Input Your CVV Number (3 digits): ";
 		cin >> CVV;
-		cout << valid;
 		valid = CVV / 100;
 
 		if (cin.fail() || valid < 1 || valid > 9)
 		{
 			cin.clear();										 // remove the input operation
 			cin.ignore(numeric_limits<streamsize>::max(), '\n'); // remove content
-			cout << "Invalid CVV number" << endl;
+			cout << "----- Invalid CVV number -----" << endl;
 			continue;
 		}
 
@@ -1055,9 +1081,10 @@ void displayDetailsBetweenTwoSelectedCities(int route, int departure, int arriva
 
 	createTicket(TicketRoute, departureStation, arrivalStation, departureDate, departureTime, ticketAmount, totalTicketPrice, customerId);
 
-	cout << "Thank You Very Much" << endl;
+	cout << "----- Thank You Very Much -----" << endl;
 	system("pause");
 }
+
 // 1) Customer Purchase Ticket
 void purchaseticket(string customerId)
 {
@@ -1093,7 +1120,7 @@ void purchaseticket(string customerId)
 	}
 
 
-	
+
 
 	// Select Departure Date
 	int DepartureYear, DepartureMonth, DepartureDay;
@@ -1103,8 +1130,8 @@ void purchaseticket(string customerId)
 	while (InputCorrect == 0)
 	{
 		system("CLS");
-		cout << "Please enter your departure Date (in YYYY/MM/DD format): " << endl;
-		cout << "Note: Ticket can only be bought before 2025" << endl;
+		cout << "Please Enter Your Departure Date (in YYYY/MM/DD format): " << endl;
+		cout << "Note: Ticket can only be purchased before 2025!" << endl;
 		cout << "Date: ";
 		cin >> DepartureYear >> seperator1 >> DepartureMonth >> seperator2 >> DepartureDay;
 
@@ -1112,7 +1139,7 @@ void purchaseticket(string customerId)
 		{
 			cin.clear();										 // remove the input operation
 			cin.ignore(numeric_limits<streamsize>::max(), '\n'); // remove content
-			cout << "Invalid Format" << endl;
+			cout << "----- Invalid Format -----" << endl;
 			system("pause");
 			continue;
 		}
@@ -1120,23 +1147,23 @@ void purchaseticket(string customerId)
 		switch (isValidDate(DepartureYear, DepartureMonth, DepartureDay))
 		{
 		case 0:
-			cout << "Invalid Year" << endl;
+			cout << "----- Invalid Year -----" << endl;
 			system("pause");
 			break;
 		case 1:
-			cout << "Invalid Month" << endl;
+			cout << "----- Invalid Month -----" << endl;
 			system("pause");
 			break;
 		case 2:
-			cout << "Invalid Day" << endl;
+			cout << "----- Invalid Day -----" << endl;
 			system("pause");
 			break;
 		case 3:
-			cout << "This year Febuary only has 28 days" << endl;
+			cout << "----- This Year February Only Has 28 Days -----" << endl;
 			system("pause");
 			break;
 		case 4:
-			cout << "The selected date is past" << endl;
+			cout << "----- The Selected Date Is Already Past -----" << endl;
 			system("pause");
 			break;
 		case 5:
@@ -1170,14 +1197,12 @@ void purchaseticket(string customerId)
 	displayDetailsBetweenTwoSelectedCities(route, departure, arrival, DepartureYear, DepartureMonth, DepartureDay, DepartureHour, DepartureMinutes, customerId);
 }
 
-
 // 2) Print Station Details
-void printStationDetails()
+int printStationDetails()
 {
-	idExtract(stationTail->StationID);
-	int decision;
-
+	int decision = 0;
 	int count = 1;
+
 	stationCurrent = stationHead;
 	while (stationCurrent != NULL)
 	{
@@ -1189,10 +1214,15 @@ void printStationDetails()
 	}
 
 	cout << count << ") " << "Return to main menu" << endl;
-	cout << "Select your station" << endl;
+	cout << "\nSelect Your Station:" << endl;
 	cin >> decision;
 
-	if (decision > 0 && decision < count)
+
+	if (decision == count)
+	{
+		return 0;
+	}
+	else if (decision > 0 && decision < count)
 	{
 		stationCurrent = stationHead;
 		while (stationCurrent != NULL)
@@ -1218,38 +1248,35 @@ void printStationDetails()
 		int Continue;
 		while (true)
 		{
-			cout << "Continue Searching for station details ?" << endl;
+			cout << "Continue Searching For Station Details ?" << endl;
 			cout << "1) Yes     2) No" << endl;
 			cin >> Continue;
 
 			if (Continue == 1)
 			{
-				printStationDetails();
+				return 1;
 			}
 			else if (Continue == 2)
 			{
-				return;
+				return 0;
 			}
 			else
 			{
 				cin.clear();										 // remove the input operation
 				cin.ignore(numeric_limits<streamsize>::max(), '\n'); // remove content
-				cout << "Incorrect Input" << endl;
+				cout << "----- Incorrect Input -----" << endl;
 			}
 		}
-	}
-	else if (decision == count)
-	{
-		return;
 	}
 	else
 	{
 		cin.clear();										 // remove the input operation
 		cin.ignore(numeric_limits<streamsize>::max(), '\n'); // remove content
-		cout << "Incorrect Input" << endl;
+		cout << "----- Incorrect Input -----" << endl;
 		printStationDetails();
 	}
 }
+
 void printAllStationDetails()
 {
 	stationCurrent = stationHead;
@@ -1276,49 +1303,114 @@ void deletePurchaseTransaction(string customerId)
 {
 	string transactionId;
 	int confirm = 0;
-	cout << "Please input your transaction id: " << endl;
+	cout << "Please Input Your Transaction ID: " << endl;
 	cin >> transactionId;
 
-	// check whether this transaction id is in this passenger account
-	ticketCurrent = ticketHead;
-	Ticket* ticketTemp;
-	while (ticketCurrent != NULL)
+	//Temporary variable to delete ticket node
+	Ticket* ticketDelete;
+	int changeTicketTail = 0;
+
+	//If there is only one ticket in the system
+	if (ticketHead == ticketTail)
 	{
-		if (ticketCurrent->TransactionID == transactionId && ticketCurrent->CustomerID == customerId)
+		// check whether this transaction id is in this passenger account
+		if (ticketHead->TransactionID == transactionId && ticketHead->CustomerID == customerId)
 		{
-			if (ticketCurrent == ticketHead)
-			{
-				ticketHead = ticketHead->nextAdd;
-			}
-			ticketTemp = ticketCurrent;
-			ticketCurrent = ticketCurrent->nextAdd;
-			delete ticketTemp;
+			changeTicketTail = 0;
+			ticketDelete = ticketHead;
+
+			ticketHead = ticketTail = NULL;
+
+			delete ticketDelete;
 			confirm++;
 			ticketCounts--;
 		}
-		else
-		{
+	}
 
+
+	//If there are many tickets in the system
+	else
+	{
+		ticketCurrent = ticketHead->nextAdd;
+		Ticket* Temp = ticketHead;
+
+		while (ticketCurrent != NULL)
+		{
+			// check whether this transaction id is in this passenger account
+			if (ticketCurrent->TransactionID == transactionId && ticketCurrent->CustomerID == customerId)
+			{
+
+				if (ticketCurrent == ticketTail)
+				{
+					ticketTail = NULL;
+					changeTicketTail = 1;
+				}
+				ticketDelete = ticketCurrent;
+				ticketCurrent = ticketCurrent->nextAdd;
+				Temp->nextAdd = ticketCurrent;
+				delete ticketDelete;
+				confirm++;
+				ticketCounts--;
+			}
+			else
+			{
+				ticketCurrent = ticketCurrent->nextAdd;
+				Temp = Temp->nextAdd;
+			}
+		}
+
+		//Check Ticket Head
+		if (ticketHead->TransactionID == transactionId && ticketHead->CustomerID == customerId)
+		{
+			ticketDelete = ticketHead;
+
+			ticketHead = ticketHead->nextAdd;
+
+			if (ticketHead == NULL)
+			{
+				changeTicketTail = 0;
+			}
+
+			delete ticketDelete;
+			confirm++;
+			ticketCounts--;
+		}
+	}
+
+
+
+	//Relocate Ticket Tail if neccesary
+	if (changeTicketTail == 1)
+	{
+		ticketCurrent = ticketHead;
+		while (ticketCurrent != NULL)
+		{
+			if (ticketCurrent->nextAdd == NULL)
+			{
+				ticketTail = ticketCurrent;
+			}
 			ticketCurrent = ticketCurrent->nextAdd;
 		}
 	}
 
 	if (confirm > 0)
 	{
-		cout << "Transaction deleted sucessful, fund will be refund to your credit card" << endl;
+		cout << "----- Transaction Deleted Sucessfully! Fund Will Be Refunded To Passenger's Credit Card -----" << endl;
 		return;
 	}
 	else
 	{
-		cout << "Transaction is not found, returning to main menu" << endl;
+		cout << "----- Transaction is not found, returning to main menu -----" << endl;
 	}
 }
+
 void printAndDeleteTransactionHistory(string customerId)
 {
+
 	// If system has no ticket history
 	if (ticketHead == NULL)
 	{
-		cout << "This system has no transaction history" << endl;
+		cout << "This system does not have any transaction history" << endl;
 		return;
 	}
 
@@ -1330,8 +1422,8 @@ void printAndDeleteTransactionHistory(string customerId)
 		{
 			if (ticketCurrent->CustomerID == customerId)
 			{
-				cout << "Transaction Id: " << ticketCurrent->TransactionID << endl;
-				cout << "Ticket id: " << ticketCurrent->TicketID << endl;
+				cout << "Transaction ID: " << ticketCurrent->TransactionID << endl;
+				cout << "Ticket ID: " << ticketCurrent->TicketID << endl;
 				cout << "Ticket Route: " << ticketCurrent->TicketRoute << endl;
 				cout << "Departure Station: " << ticketCurrent->NameOfTheSourceStation << endl;
 				cout << "Arrival Station: " << ticketCurrent->NameofTheTargetStation << endl;
@@ -1348,19 +1440,23 @@ void printAndDeleteTransactionHistory(string customerId)
 
 		if (ticketCount > 0)
 		{
-			cout << "You have total of " << ticketCount << " tickets in your account" << endl;
+			cout << "There are a total of " << ticketCount << " ticket(s) in this account." << endl;
 		}
 		else
 		{
-			cout << "This account has no purchase history" << endl;
+			cout << "This account does not have any purchase history, Returning to main menu" << endl;
+			system("pause");
+			return;
 		}
 	}
 
 	int choice;
 	while (true)
 	{
-		cout << "1) Delete purchase transaction" << endl;
-		cout << "2) Return to Main menu " << endl;
+
+
+		cout << "1) Delete Purchase Transaction" << endl;
+		cout << "2) Return Back to Main menu " << endl;
 		cin >> choice;
 		if (choice == 1)
 		{
@@ -1375,7 +1471,7 @@ void printAndDeleteTransactionHistory(string customerId)
 		{
 			cin.clear();										 // remove the input operation
 			cin.ignore(numeric_limits<streamsize>::max(), '\n'); // remove content
-			cout << "Invalid Input" << endl;
+			cout << "----- Invalid Input -----" << endl;
 		}
 	}
 }
@@ -1387,9 +1483,9 @@ void printAndDeleteTransactionHistory(string customerId)
 //-----------------    Admin    ----------------------
 //----------------------------------------------------
 
-
-// quick sort
 /*
+// quick sort
+
 // https://www.geeksforgeeks.org/cpp-program-for-quicksort/
 void swapTicket(Ticket* arr, int start, int end)
 {
@@ -1695,7 +1791,7 @@ void searchPurchaseCustomerTicketPurchaseInformation()
 	{
 		cout << "The specific customer ticket purchase information is not found." << endl;
 	}
-} 
+}
 
 */
 
@@ -1716,6 +1812,7 @@ int getStationId(string stationName)
 		stationCurrent = stationCurrent->nextAdd;
 	}
 }
+
 string getStationName(int stationId)
 {
 	//Getting Station Name from id
@@ -1732,6 +1829,7 @@ string getStationName(int stationId)
 		stationCurrent = stationCurrent->nextAdd;
 	}
 }
+
 string changeDepartureTime(int route, int departure, string oldDepartureDate)
 {
 	int todaydate;
@@ -1745,7 +1843,7 @@ string changeDepartureTime(int route, int departure, string oldDepartureDate)
 	int CurrentMonth = 1 + newtime.tm_mon;
 	int CurrentDay = newtime.tm_mday;
 
-	string CurrentDate = to_string(CurrentYear) + "/" + to_string(CurrentMonth) + "/" + to_string(CurrentYear);
+	string CurrentDate = to_string(CurrentYear) + "/" + to_string(CurrentMonth) + "/" + to_string(CurrentDay);
 
 	//Check Date
 	if (CurrentDate == oldDepartureDate)
@@ -1757,60 +1855,106 @@ string changeDepartureTime(int route, int departure, string oldDepartureDate)
 		todaydate = 0;
 	}
 
-	return listAllPossibleDepartureTime(route, departure, todaydate);
+	string newDepartureTime = listAllPossibleDepartureTime(route, departure, todaydate);
+
+
+	if (newDepartureTime != "")
+	{
+		int pos = newDepartureTime.find(":");
+
+		int DepartureHour = stoi(newDepartureTime.substr(0, pos));
+		int DepartureMinutes = stoi(newDepartureTime.substr(pos + 1));
+
+		int timecheck;
+		string newDepartureHour;
+		string newDepartureMinute;
+
+		timecheck = DepartureHour - 10;
+		if (timecheck < 0)
+		{
+			newDepartureHour = "0" + to_string(DepartureHour);
+		}
+		else
+		{
+			newDepartureHour = to_string(DepartureHour);
+		}
+
+		timecheck = DepartureMinutes - 10;
+		if (timecheck < 0)
+		{
+			newDepartureMinute = "0" + to_string(DepartureMinutes);
+		}
+		else
+		{
+			newDepartureMinute = to_string(DepartureMinutes);
+		}
+
+		newDepartureTime = newDepartureHour + ":" + newDepartureMinute;
+	}
+
+
+	return newDepartureTime;
 }
-double calculateNewFund(double oldprice, int ticketamount,int departure, int arrival)
+
+double calculateNewFund(double oldprice, int ticketamount, int departure, int arrival)
 {
 	double newprice = 0;
-	stationCurrent = stationHead;
 
-	while (true)
+	if (arrival > departure) // route 1
 	{
-		if (arrival > departure) // route 1
+		stationCurrent = stationHead;
+		for (int i = 1; i < departure; i++)
 		{
-			if (idExtract(stationCurrent->StationID) == departure)
-			{
-				newprice = newprice + stationCurrent->CostBetweenNextStation;
-				if (idExtract(stationCurrent->nextAdd->StationID) == arrival)
-				{
-					break;
-				}
-			}
 			stationCurrent = stationCurrent->nextAdd;
-			
 		}
-		else if (departure > arrival) // route 2
+
+		for (int i = departure; i < arrival; i++)
 		{
-			if (idExtract(stationCurrent->StationID) == arrival)
-			{
-				newprice = newprice + stationCurrent->CostBetweenNextStation;
-				if (idExtract(stationCurrent->nextAdd->StationID) == departure)
-				{
-					break;
-				}
-			}
+			newprice = newprice + stationCurrent->CostBetweenNextStation;
 			stationCurrent = stationCurrent->nextAdd;
+		}
+
+	}
+
+	else if (departure > arrival) // route 2
+	{
+		stationCurrent = stationTail;
+		for (int i = idExtract(stationTail->StationID); i > departure; i--)
+		{
+			stationCurrent = stationCurrent->prevAdd;
+		}
+
+		for (int i = departure; i > arrival; i--)
+		{
+			newprice = newprice + stationCurrent->CostBetweenPreviousStation;
+			stationCurrent = stationCurrent->prevAdd;
 		}
 	}
+
 
 	newprice = newprice * ticketamount;
 
-	int change;
-	cout << "The current ticket price is RM " << fixed << setprecision(2) << setfill('0') << newprice << endl;
+	double change = 0;
+	cout << "The current ticket price is RM " << fixed << setprecision(2) << setfill('0') << newprice << "." << endl;
 	if (newprice > oldprice)
 	{
 		change = newprice - oldprice;
-		cout << "Total of RM " << fixed << setprecision(2) << setfill('0') << change << "has to be paid" << endl;
+		cout << "Total of RM " << fixed << setprecision(2) << setfill('0') << change << " has to be paid by the passenger" << endl;
+	}
+	else if (newprice < oldprice)
+	{
+		change = oldprice - newprice;
+		cout << "Total of RM " << fixed << setprecision(2) << setfill('0') << change << " has to be refunded by the passenger" << endl;
 	}
 	else
 	{
-		change = oldprice - newprice;
-		cout << "Total of RM " << fixed << setprecision(2) << setfill('0') << change << "has to be refunded" << endl;
+		cout << "----- The price remains the same -----" << endl;
 	}
 
 	return newprice;
-	
+
 }
+
 int checkTransactionIdAvailable(string transactionId)
 {
 	ticketCurrent = ticketHead;
@@ -1828,450 +1972,587 @@ int checkTransactionIdAvailable(string transactionId)
 	}
 	return 0;
 }
+
 void editCustomerTicket()
 {
 	string transactionid;
-	cout << "Input transaction id: " << endl;
+	cout << "Input Transaction ID: " << endl;
 	cin >> transactionid;
 
 	int status = checkTransactionIdAvailable(transactionid);
 
 	if (status == 0)
 	{
-		cout << " Transaction id is not found " << endl;
+		cout << " Transaction ID is not found " << endl;
 		editCustomerTicket();
 	}
 
+
 	int editSelection;
-	cout << "1) Edit Route" << endl;
-	cout << "2) Edit Destinaton" << endl;
-	cout << "3) Edit Arrival" << endl;
-	cout << "4) Edit Date" << endl;
-	cout << "5) Edit departure time" << endl;
-	cin >> editSelection;
 
 
-	// Use for extracting info
-	Ticket* Temp = ticketCurrent;
 
-	//Edit Route
-	if (editSelection == 1)
+	while (true)
 	{
-		string leftToRightStation = stationHead->StationName + " -> " + stationTail->StationName;
-		string rightToLeftStation = stationHead->StationName + " <- " + stationTail->StationName;
+		cout << "1) Edit Route" << endl;
+		cout << "2) Edit Destination Location" << endl;
+		cout << "3) Edit Arrival Location" << endl;
+		cout << "4) Edit Date" << endl;
+		cout << "5) Edit Departure Time" << endl;
+		cout << "6) Return to Main Menu" << endl;
 
-		cout << "Current the ticket's route is: " << Temp->TicketRoute << endl;
-		cout << "Do you wish to change? " << endl;
-		
+		cout << "Select Your Decision: ";
+		cin >> editSelection;
 
-		int change;
-		int route;
 
-		while (true)
+		// Use for extracting info
+		Ticket* Temp = ticketCurrent;
+
+		//Edit Route
+		if (editSelection == 1)
 		{
-			cout << "1) Yes      2) No  :";
-			cin >> change;
+			string leftToRightStation = stationHead->StationName + " -> " + stationTail->StationName;
+			string rightToLeftStation = stationHead->StationName + " <- " + stationTail->StationName;
 
-			if (change == 1)
+			cout << "Current Ticket Route Is: " << Temp->TicketRoute << endl;
+			cout << "Do you wish to change? " << endl;
+
+
+			int change;
+			int route;
+
+			while (true)
 			{
-				string departureToArrivalStation;
-				string arrivalToDepartureStation;
+				cout << "1) Yes      2) No  :";
+				cin >> change;
 
-				if (ticketCurrent->TicketRoute == leftToRightStation)
+				if (change == 1)
 				{
-					route = 2;
-				}
-				else
-				{
-					route = 1;
-				}
+					string departureToArrivalStation;
+					string arrivalToDepartureStation;
 
-				
-				int newdepartureId = getStationId(Temp->NameofTheTargetStation);
-				cout << "Departure ID: " << newdepartureId << endl;
-
-				//Change time
-				string DepartureTime = changeDepartureTime(route, newdepartureId, Temp->DepartureDate);
-				if (DepartureTime == "")
-				{
-					return;
-				}
-
-				//Edit Ticket
-				ticketCurrent = ticketHead;
-				while (ticketCurrent != NULL)
-				{
-					if (ticketCurrent->TransactionID == transactionid)
+					if (ticketCurrent->TicketRoute == leftToRightStation)
 					{
-						if (ticketCurrent->TicketRoute == leftToRightStation)
-						{
-							ticketCurrent->TicketRoute = rightToLeftStation;
-						}
-						else
-						{
-							ticketCurrent->TicketRoute = leftToRightStation;
-						}
-
-						//Interchange deprature and arrival station
-						departureToArrivalStation = ticketCurrent->NameOfTheSourceStation;
-						arrivalToDepartureStation = ticketCurrent->NameofTheTargetStation;
-
-						ticketCurrent->NameOfTheSourceStation = arrivalToDepartureStation;
-						ticketCurrent->NameofTheTargetStation = departureToArrivalStation;
-
-						ticketCurrent->DepartureTime = DepartureTime;
-
-					}
-					ticketCurrent = ticketCurrent->nextAdd;
-
-				}
-
-
-			}
-			else if (change == 2)
-			{
-				return;
-			}
-			else
-			{
-				cin.clear();										 // remove the input operation
-				cin.ignore(numeric_limits<streamsize>::max(), '\n'); // remove content
-				cout << "Incorrect Input" << endl;
-				system("pause");
-			}
-		}	
-	}
-
-	//Edit Departure
-	else if (editSelection == 2)
-	{
-		cout << "Current Ticket Departure is: " << Temp->NameOfTheSourceStation << endl;
-		cout << "Do you wish to change: " << endl;
-
-		int change;
-		int route;
-
-
-		while (true)
-		{
-			cout << "1) Yes      2) No  :";
-			cin >> change;
-
-			if (change == 1)
-			{
-				string departureToArrivalStation;
-				string arrivalToDepartureStation;
-
-				//Getting route
-				if (Temp->TicketRoute == stationHead->StationName + " -> " + stationTail->StationName)
-				{
-					route = 1;
-				}
-				else
-				{
-					route = 2;
-				}
-
-				int currentArrivalStationid = getStationId(Temp->NameofTheTargetStation);
-				int count = 1;
-
-				//Get All possible departure station based on arrival station and route
-				stationCurrent = stationHead;
-				while (stationCurrent != NULL)
-				{
-					if (route == 1)
-					{
-						if (idExtract(stationCurrent->StationID) == currentArrivalStationid)
-						{
-							break;
-						}
-						else
-						{
-							cout << count << ") " << stationCurrent->StationName << endl;
-							count++;
-						}
-					}
-					else if (route == 2)
-					{
-						if (idExtract(stationCurrent->StationID) > currentArrivalStationid)
-						{
-							cout << count << ") " << stationCurrent->StationName << endl;
-							count++;
-						}
-					}
-					stationCurrent = stationCurrent->nextAdd;
-					
-				}
-
-
-				cout << count << ") Return to Main menu" << endl;
-
-				//Select new departure
-				int newDepartureId;
-				while (true)
-				{
-					cout << "Select your departure station: ";
-					cin >> newDepartureId;
-					if (newDepartureId > 0 && newDepartureId < count)
-					{
-						switch (route)
-						{
-						case 1:
-							newDepartureId = newDepartureId;
-						case 2:
-							newDepartureId = newDepartureId + currentArrivalStationid;
-						}
-
-					}
-					else if (newDepartureId == count)
-					{
-						return;
+						route = 2;
 					}
 					else
 					{
-						cin.clear();										 // remove the input operation
-						cin.ignore(numeric_limits<streamsize>::max(), '\n'); // remove content
-						cout << "Incorrect Input" << endl;
-						system("pause");
+						route = 1;
 					}
-				}
-
-				cout << "Departure ID: " << newDepartureId << endl;
-
-				//Get new Departure Station Name
-				string newDepartureName = getStationName(newDepartureId);
-
-				//Change time
-				string DepartureTime = changeDepartureTime(route, newDepartureId, Temp->DepartureDate);
-				if (DepartureTime == "")
-				{
-					return;
-				}
-
-				//Check edited ticket price
-				double newprice = calculateNewFund(Temp->TotalTicketPrice, Temp->TicketAmount,newDepartureId, currentArrivalStationid);
-
-				//Edit Ticket
-				ticketCurrent = ticketHead;
-				while (ticketCurrent != NULL)
-				{
-					if (ticketCurrent->TransactionID == transactionid)
-					{
-
-						ticketCurrent->NameOfTheSourceStation = newDepartureName;
-						ticketCurrent->DepartureTime = DepartureTime;
-						ticketCurrent->TotalTicketPrice = newprice;
-
-					}
-					ticketCurrent = ticketCurrent->nextAdd;
-
-				}
-
-			}
-		}
-	}
-
-	//Edit Arrival
-	else if (editSelection == 3) 
-	{
-		cout << "Current Ticket Arrival is: " << Temp->NameofTheTargetStation << endl;
-		cout << "Do you wish to change: " << endl;
-
-		int change;
-		int route;
 
 
-		while (true)
-		{
-			cout << "1) Yes      2) No  :";
-			cin >> change;
+					int newdepartureId = getStationId(Temp->NameofTheTargetStation);
 
-			if (change == 1)
-			{
-				string departureToArrivalStation;
-				string arrivalToDepartureStation;
-
-				//Getting route
-				if (Temp->TicketRoute == stationHead->StationName + " -> " + stationTail->StationName)
-				{
-					route = 1;
-				}
-				else
-				{
-					route = 2;
-				}
-
-				int currentDepartureStationid = getStationId(Temp->NameOfTheSourceStation);
-				int count = 1;
-
-				//Get All possible departure station based on arrival station and route
-				stationCurrent = stationHead;
-				while (stationCurrent != NULL)
-				{
-					if (route == 2)
-					{
-						if (idExtract(stationCurrent->StationID) == currentDepartureStationid)
-						{
-							break;
-						}
-						else
-						{
-							cout << count << ") " << stationCurrent->StationName << endl;
-							count++;
-						}
-					}
-					else if (route == 1)
-					{
-						if (idExtract(stationCurrent->StationID) > currentDepartureStationid)
-						{
-							cout << count << ") " << stationCurrent->StationName << endl;
-							count++;
-						}
-					}
-					stationCurrent = stationCurrent->nextAdd;
-
-				}
+					cout << "-------------------------------------------------" << endl;
+					cout << "Steps To Edit Route: " << endl;
+					cout << "1) Current Route: " << Temp->TicketRoute << " will be changed." << endl;
+					cout << "2) Reselect Departure Time" << endl;
+					cout << "3) Route Will Be Changed" << endl;
+					cout << "4) Your Destination Location and Arrival Location Will Be Switched" << endl;
+					cout << "-------------------------------------------------" << endl;
 
 
-				cout << count << ") Return to Main menu" << endl;
-
-				//Select new departure
-				int newArrivalId;
-				while (true)
-				{
-					cout << "Select your departure station: ";
-					cin >> newArrivalId;
-					if (newArrivalId > 0 && newArrivalId < count)
-					{
-						switch (route)
-						{
-						case 1:
-							newArrivalId = newArrivalId + currentDepartureStationid;
-						case 2:
-							newArrivalId = newArrivalId;
-						}
-
-					}
-					else if (newArrivalId == count)
+					//Change time
+					string DepartureTime = changeDepartureTime(route, newdepartureId, Temp->DepartureDate);
+					if (DepartureTime == "")
 					{
 						return;
 					}
+
+					cout << "Departure Time: " << DepartureTime << endl;
+
+					//Edit Ticket
+					ticketCurrent = ticketHead;
+					while (ticketCurrent != NULL)
+					{
+						if (ticketCurrent->TransactionID == transactionid)
+						{
+							if (ticketCurrent->TicketRoute == leftToRightStation)
+							{
+								ticketCurrent->TicketRoute = rightToLeftStation;
+							}
+							else
+							{
+								ticketCurrent->TicketRoute = leftToRightStation;
+							}
+
+							//Interchange deprature and arrival station
+							departureToArrivalStation = ticketCurrent->NameOfTheSourceStation;
+							arrivalToDepartureStation = ticketCurrent->NameofTheTargetStation;
+
+							ticketCurrent->NameOfTheSourceStation = arrivalToDepartureStation;
+							ticketCurrent->NameofTheTargetStation = departureToArrivalStation;
+
+							ticketCurrent->DepartureTime = DepartureTime;
+
+						}
+						ticketCurrent = ticketCurrent->nextAdd;
+
+					}
+
+					break;
+				}
+				else if (change == 2)
+				{
+					return;
+				}
+				else
+				{
+					cin.clear();										 // remove the input operation
+					cin.ignore(numeric_limits<streamsize>::max(), '\n'); // remove content
+					cout << "----- Incorrect Input -----" << endl;
+					system("pause");
+				}
+
+			}
+		}
+
+		//Edit Departure
+		else if (editSelection == 2)
+		{
+			cout << "Current Ticket Departure Station Is: " << Temp->NameOfTheSourceStation << endl;
+			cout << "Do you wish to change? " << endl;
+
+			int change;
+			int route;
+
+
+			while (true)
+			{
+				cout << "1) Yes      2) No  :";
+				cin >> change;
+
+				if (change == 1)
+				{
+
+					//Getting route
+					if (Temp->TicketRoute == stationHead->StationName + " -> " + stationTail->StationName)
+					{
+						route = 1;
+					}
 					else
 					{
-						cin.clear();										 // remove the input operation
-						cin.ignore(numeric_limits<streamsize>::max(), '\n'); // remove content
-						cout << "Incorrect Input" << endl;
-						system("pause");
+						route = 2;
 					}
-				}
 
-				cout << "Departure ID: " << newArrivalId << endl;
+					int currentArrivalStationid = getStationId(Temp->NameofTheTargetStation);
+					int count = 1;
 
-				//Get new Departure Station Name
-				string newDepartureName = getStationName(newArrivalId);
-
-
-				//Check edited ticket price
-				double newprice = calculateNewFund(Temp->TotalTicketPrice, Temp->TicketAmount, currentDepartureStationid, newArrivalId);
-
-				//Edit Ticket
-				ticketCurrent = ticketHead;
-				while (ticketCurrent != NULL)
-				{
-					if (ticketCurrent->TransactionID == transactionid)
+					//Get All possible departure station based on arrival station and route
+					stationCurrent = stationHead;
+					while (stationCurrent != NULL)
 					{
-
-						ticketCurrent->NameOfTheSourceStation = newDepartureName;
-						ticketCurrent->TotalTicketPrice = newprice;
+						if (route == 1)
+						{
+							if (idExtract(stationCurrent->StationID) == currentArrivalStationid)
+							{
+								break;
+							}
+							else
+							{
+								cout << count << ") " << stationCurrent->StationName << endl;
+								count++;
+							}
+						}
+						else if (route == 2)
+						{
+							if (idExtract(stationCurrent->StationID) > currentArrivalStationid)
+							{
+								cout << count << ") " << stationCurrent->StationName << endl;
+								count++;
+							}
+						}
+						stationCurrent = stationCurrent->nextAdd;
 
 					}
-					ticketCurrent = ticketCurrent->nextAdd;
 
+
+					cout << count << ") Return to Main menu" << endl;
+
+					//Select new departure
+					int newDepartureId;
+					while (true)
+					{
+						cout << "Select Your Departure Station: ";
+						cin >> newDepartureId;
+						if (newDepartureId > 0 && newDepartureId < count)
+						{
+							switch (route)
+							{
+							case 1:
+								newDepartureId = newDepartureId;
+								break;
+							case 2:
+								newDepartureId = newDepartureId + currentArrivalStationid;
+							}
+							break;
+						}
+						else if (newDepartureId == count)
+						{
+							return;
+						}
+						else
+						{
+							cin.clear();										 // remove the input operation
+							cin.ignore(numeric_limits<streamsize>::max(), '\n'); // remove content
+							cout << "----- Incorrect Input -----" << endl;
+							system("pause");
+						}
+					}
+
+
+					//Get new Departure Station Name
+					string newDepartureName = getStationName(newDepartureId);
+
+
+					//Change time
+					string DepartureTime = changeDepartureTime(route, newDepartureId, Temp->DepartureDate);
+					if (DepartureTime == "")
+					{
+						return;
+					}
+
+					//Check edited ticket price
+					double newprice = calculateNewFund(Temp->TotalTicketPrice, Temp->TicketAmount, newDepartureId, currentArrivalStationid);
+
+
+					//Edit Ticket
+					ticketCurrent = ticketHead;
+					while (ticketCurrent != NULL)
+					{
+						if (ticketCurrent->TransactionID == transactionid)
+						{
+
+							ticketCurrent->NameOfTheSourceStation = newDepartureName;
+							ticketCurrent->DepartureTime = DepartureTime;
+							ticketCurrent->TotalTicketPrice = newprice;
+
+						}
+						ticketCurrent = ticketCurrent->nextAdd;
+
+					}
+					break;
+				}
+				else if (change == 2)
+				{
+					return;
+				}
+				else
+				{
+					cin.clear();										 // remove the input operation
+					cin.ignore(numeric_limits<streamsize>::max(), '\n'); // remove content
+					cout << "----- Incorrect Input -----" << endl;
+					system("pause");
+				}
+			}
+
+		}
+
+		//Edit Arrival
+		else if (editSelection == 3)
+		{
+			cout << "Current Ticket Arrival Is: " << Temp->NameofTheTargetStation << endl;
+			cout << "Do you wish to change?" << endl;
+
+			int change;
+			int route;
+
+
+			while (true)
+			{
+				cout << "1) Yes      2) No  :";
+				cin >> change;
+
+				if (change == 1)
+				{
+					string departureToArrivalStation;
+					string arrivalToDepartureStation;
+
+					//Getting route
+					if (Temp->TicketRoute == stationHead->StationName + " -> " + stationTail->StationName)
+					{
+						route = 1;
+					}
+					else
+					{
+						route = 2;
+					}
+
+					int currentDepartureStationid = getStationId(Temp->NameOfTheSourceStation);
+					int count = 1;
+
+					//Get All possible departure station based on arrival station and route
+					stationCurrent = stationHead;
+					while (stationCurrent != NULL)
+					{
+						if (route == 2)
+						{
+							if (idExtract(stationCurrent->StationID) == currentDepartureStationid)
+							{
+								break;
+							}
+							else
+							{
+								cout << count << ") " << stationCurrent->StationName << endl;
+								count++;
+							}
+						}
+						else if (route == 1)
+						{
+							if (idExtract(stationCurrent->StationID) > currentDepartureStationid)
+							{
+								cout << count << ") " << stationCurrent->StationName << endl;
+								count++;
+							}
+						}
+						stationCurrent = stationCurrent->nextAdd;
+
+					}
+
+
+					cout << count << ") Return to Main menu" << endl;
+
+					//Select new departure
+					int newArrivalId;
+					while (true)
+					{
+						cout << "Select Your Arrival Station: ";
+						cin >> newArrivalId;
+						if (newArrivalId > 0 && newArrivalId < count)
+						{
+							switch (route)
+							{
+							case 1:
+								newArrivalId = newArrivalId + currentDepartureStationid;
+								break;
+							case 2:
+								newArrivalId = newArrivalId;
+							}
+							break;
+
+						}
+						else if (newArrivalId == count)
+						{
+							return;
+						}
+						else
+						{
+							cin.clear();										 // remove the input operation
+							cin.ignore(numeric_limits<streamsize>::max(), '\n'); // remove content
+							cout << "----- Incorrect Input -----" << endl;
+							system("pause");
+						}
+
+					}
+
+
+					//Get new Arrival Station Name
+					string newArrivalName = getStationName(newArrivalId);
+
+
+					//Check edited ticket price
+					double newprice = calculateNewFund(Temp->TotalTicketPrice, Temp->TicketAmount, currentDepartureStationid, newArrivalId);
+
+					//Edit Ticket
+					ticketCurrent = ticketHead;
+					while (ticketCurrent != NULL)
+					{
+						if (ticketCurrent->TransactionID == transactionid)
+						{
+
+							ticketCurrent->NameofTheTargetStation = newArrivalName;
+							ticketCurrent->TotalTicketPrice = newprice;
+
+						}
+						ticketCurrent = ticketCurrent->nextAdd;
+
+					}
+					break;
+
+				}
+				else if (change == 2)
+				{
+					return;
+				}
+				else
+				{
+					cin.clear();										 // remove the input operation
+					cin.ignore(numeric_limits<streamsize>::max(), '\n'); // remove content
+					cout << "----- Incorrect Input -----" << endl;
+					system("pause");
+				}
+			}
+		}
+
+		//Edit Date
+		else if (editSelection == 4)
+		{
+			cout << "Current Ticket Departure Date Is: " << Temp->DepartureDate << endl;
+			cout << "Do you wish to change? " << endl;
+
+			int change;
+			int route;
+
+			while (true)
+			{
+				cout << "1) Yes      2) No  :";
+				cin >> change;
+
+				if (change == 1)
+				{
+					// Select Departure Date
+					int DepartureYear, DepartureMonth, DepartureDay;
+					char seperator1, seperator2;
+					int InputCorrect = 0;
+					int TodayDate = 0;
+					while (InputCorrect == 0)
+					{
+						system("CLS");
+						cout << "Please Enter Your Departure Date (in YYYY/MM/DD format): " << endl;
+						cout << "Note: Ticket can only be purchased before 2025" << endl;
+						cout << "Date: ";
+						cin >> DepartureYear >> seperator1 >> DepartureMonth >> seperator2 >> DepartureDay;
+
+						if (cin.fail() || seperator1 != '/' || seperator2 != '/')
+						{
+							cin.clear();										 // remove the input operation
+							cin.ignore(numeric_limits<streamsize>::max(), '\n'); // remove content
+							cout << "----- Invalid Format -----" << endl;
+							system("pause");
+							continue;
+						}
+
+						switch (isValidDate(DepartureYear, DepartureMonth, DepartureDay))
+						{
+						case 0:
+							cout << "----- Invalid Year -----" << endl;
+							system("pause");
+							break;
+						case 1:
+							cout << "----- Invalid Month -----" << endl;
+							system("pause");
+							break;
+						case 2:
+							cout << "----- Invalid Day -----" << endl;
+							system("pause");
+							break;
+						case 3:
+							cout << "----- This year February only has 28 days -----" << endl;
+							system("pause");
+							break;
+						case 4:
+							cout << "----- The selected date is already past -----" << endl;
+							system("pause");
+							break;
+						case 5:
+							InputCorrect = 1;
+							TodayDate = 1;
+							break;
+						case 6:
+							InputCorrect = 1;
+						}
+					}
+
+					int changeTime = 0;
+					int newDepartureHour = 0;
+					int newDepartureMinute = 0;
+
+					if (TodayDate == 1)
+					{
+						struct tm newtime;
+						time_t now = time(0);
+						localtime_s(&newtime, &now);
+						int CurrentHours = newtime.tm_hour;
+						int CurrentMins = newtime.tm_min;
+
+						int pos = Temp->DepartureTime.find(":");
+
+						int DepartureHour = stoi(Temp->DepartureTime.substr(0, pos));
+						int DepartureMinutes = stoi(Temp->DepartureTime.substr(pos + 1));
+
+						if (DepartureHour <= CurrentHours)
+						{
+							if (DepartureMinutes <= CurrentMins)
+							{
+								changeTime = 1;
+								int route;
+								//Getting route
+								if (Temp->TicketRoute == stationHead->StationName + " -> " + stationTail->StationName)
+								{
+									route = 1;
+								}
+								else
+								{
+									route = 2;
+								}
+
+								int departure = getStationId(Temp->NameOfTheSourceStation);
+
+								string DepartureTime = listAllPossibleDepartureTime(route, departure, TodayDate);
+								if (DepartureTime == "")
+								{
+									return;
+								}
+
+
+								int pos1 = DepartureTime.find(":");
+
+								newDepartureHour = stoi(DepartureTime.substr(0, pos1));
+								newDepartureMinute = stoi(DepartureTime.substr(pos1 + 1));
+							}
+						}
+					}
+
+					ticketCurrent = ticketHead;
+					if (ticketCurrent != NULL)
+					{
+						if (ticketCurrent->TransactionID == transactionid)
+						{
+							ticketCurrent->DepartureDate = to_string(DepartureYear) + "/" + to_string(DepartureMonth) + "/" + to_string(DepartureDay);
+
+							if (changeTime == 1)
+							{
+								ticketCurrent->DepartureTime = to_string(newDepartureHour) + ":" + to_string(newDepartureMinute);
+							}
+						}
+						ticketCurrent = ticketCurrent->nextAdd;
+					}
+					break;
+				}
+				else if (change == 2)
+				{
+					return;
+				}
+				else
+				{
+					cin.clear();										 // remove the input operation
+					cin.ignore(numeric_limits<streamsize>::max(), '\n'); // remove content
+					cout << "----- Incorrect Input -----" << endl;
+					system("pause");
 				}
 
 			}
-		}
-	}
 
-	//Edit Date
-	else if (editSelection == 4)
-	{
-		// Select Departure Date
-		int DepartureYear, DepartureMonth, DepartureDay;
-		char seperator1, seperator2;
-		int InputCorrect = 0;
-		int TodayDate = 0;
-		while (InputCorrect == 0)
-		{
-			system("CLS");
-			cout << "Please enter your departure Date (in YYYY/MM/DD format): " << endl;
-			cout << "Note: Ticket can only be bought before 2025" << endl;
-			cout << "Date: ";
-			cin >> DepartureYear >> seperator1 >> DepartureMonth >> seperator2 >> DepartureDay;
 
-			if (cin.fail() || seperator1 != '/' || seperator2 != '/')
-			{
-				cin.clear();										 // remove the input operation
-				cin.ignore(numeric_limits<streamsize>::max(), '\n'); // remove content
-				cout << "Invalid Format" << endl;
-				system("pause");
-				continue;
-			}
 
-			switch (isValidDate(DepartureYear, DepartureMonth, DepartureDay))
-			{
-			case 0:
-				cout << "Invalid Year" << endl;
-				system("pause");
-				break;
-			case 1:
-				cout << "Invalid Month" << endl;
-				system("pause");
-				break;
-			case 2:
-				cout << "Invalid Day" << endl;
-				system("pause");
-				break;
-			case 3:
-				cout << "This year Febuary only has 28 days" << endl;
-				system("pause");
-				break;
-			case 4:
-				cout << "The selected date is past" << endl;
-				system("pause");
-				break;
-			case 5:
-				InputCorrect = 1;
-				TodayDate = 1;
-				break;
-			case 6:
-				InputCorrect = 1;
-			}
 		}
 
-		int changeTime = 0;
-		int newDepartureHour = 0;
-		int newDepartureMinute = 0;
-
-		if (TodayDate == 1)
+		//Edit Time
+		else if (editSelection == 5)
 		{
-			struct tm newtime;
-			time_t now = time(0);
-			localtime_s(&newtime, &now);
-			int CurrentHours = newtime.tm_hour;
-			int CurrentMins = newtime.tm_min;
+			cout << "Current Ticket Departure Time Is: " << Temp->DepartureTime << endl;
+			cout << "Do you wish to change? " << endl;
 
-			int pos = Temp->DepartureTime.find(":");
+			int change;
+			int route;
 
-			int DepartureHour = stoi(Temp->DepartureTime.substr(0, pos));
-			int DepartureMinutes = stoi(Temp->DepartureTime.substr(pos + 1));
-
-			if (DepartureHour < CurrentHours)
+			while (true)
 			{
-				if (DepartureMinutes < CurrentMins)
+				cout << "1) Yes      2) No  :";
+				cin >> change;
+
+				if (change == 1)
 				{
-					changeTime = 1;
-					int route;
 					//Getting route
 					if (Temp->TicketRoute == stationHead->StationName + " -> " + stationTail->StationName)
 					{
@@ -2284,6 +2565,22 @@ void editCustomerTicket()
 
 					int departure = getStationId(Temp->NameOfTheSourceStation);
 
+					// Get current date
+					struct tm newtime;
+					time_t now = time(0);
+					localtime_s(&newtime, &now);
+
+					int CurrentYear = 1900 + newtime.tm_year;
+					int CurrentMonth = 1 + newtime.tm_mon;
+					int CurrentDay = newtime.tm_mday;
+
+					int TodayDate = 0;
+
+					if (Temp->DepartureDate == to_string(CurrentYear) + "/" + to_string(CurrentMonth) + "/" + to_string(CurrentDay))
+					{
+						TodayDate = 1;
+					}
+
 					string DepartureTime = listAllPossibleDepartureTime(route, departure, TodayDate);
 					if (DepartureTime == "")
 					{
@@ -2291,98 +2588,93 @@ void editCustomerTicket()
 					}
 
 
-					int pos1 = DepartureTime.find(":");
-
-					newDepartureHour = stoi(DepartureTime.substr(0, pos1));
-					newDepartureMinute = stoi(DepartureTime.substr(pos1 + 1));
+					ticketCurrent = ticketHead;
+					if (ticketCurrent != NULL)
+					{
+						if (ticketCurrent->TransactionID == transactionid)
+						{
+							ticketCurrent->DepartureTime = DepartureTime;
+						}
+						ticketCurrent = ticketCurrent->nextAdd;
+					}
+					break;
 				}
-			}
-		}
-		
-		ticketCurrent = ticketHead;
-		if (ticketCurrent != NULL)
-		{
-			if (ticketCurrent->TransactionID == transactionid)
-			{
-				ticketCurrent->DepartureDate = to_string(DepartureYear) + "/" + to_string(DepartureMonth) + "/" + to_string(DepartureDay);
-
-				if (changeTime == 1)
+				else if (change == 2)
 				{
-					ticketCurrent->DepartureTime = to_string(newDepartureHour) + ":" + to_string(newDepartureMinute);
+					return;
+				}
+				else
+				{
+					cin.clear();										 // remove the input operation
+					cin.ignore(numeric_limits<streamsize>::max(), '\n'); // remove content
+					cout << "----- Incorrect Input -----" << endl;
+					system("pause");
 				}
 			}
-			ticketCurrent = ticketCurrent->nextAdd;
+
+
+
 		}
 
-	}
-
-	//Edit Time
-	else if (editSelection == 5)
-	{
-		int route;
-		//Getting route
-		if (Temp->TicketRoute == stationHead->StationName + " -> " + stationTail->StationName)
+		//Retrun to main menu
+		else if (editSelection == 6)
 		{
-			route = 1;
+			break;
 		}
+
 		else
 		{
-			route = 2;
+			cin.clear();										 // remove the input operation
+			cin.ignore(numeric_limits<streamsize>::max(), '\n'); // remove content
+			cout << "Incorrect Input" << endl;
+			system("pause");
+			system("CLS");
 		}
 
-		int departure = getStationId(Temp->NameOfTheSourceStation);
-
-		// Get current date
-		struct tm newtime;
-		time_t now = time(0);
-		localtime_s(&newtime, &now);
-
-		int CurrentYear = 1900 + newtime.tm_year;
-		int CurrentMonth = 1 + newtime.tm_mon;
-		int CurrentDay = newtime.tm_mday;
-
-		int TodayDate = 0;
-
-		if (Temp->DepartureDate == to_string(CurrentYear) + "/" + to_string(CurrentMonth) + "/" + to_string(CurrentDay))
-		{
-			TodayDate = 1;
-		}
-
-		string DepartureTime = listAllPossibleDepartureTime(route, departure, TodayDate);
-		if (DepartureTime == "")
-		{
-			return;
-		}
-
-		int pos = DepartureTime.find(":");
-
-		int newDepartureHour = stoi(DepartureTime.substr(0, pos));
-		int newDepartureMinute = stoi(DepartureTime.substr(pos + 1));
-
-		ticketCurrent = ticketHead;
-		if (ticketCurrent != NULL)
-		{
-			if (ticketCurrent->TransactionID == transactionid)
-			{
-				ticketCurrent->DepartureTime = to_string(newDepartureHour) + ":" + to_string(newDepartureMinute);
-			}
-			ticketCurrent = ticketCurrent->nextAdd;
-		}
-
+		cout << "Edit Sucessfully, returning to main menu" << endl;
+		system("pause");
+		system("CLS");
+		break;
 	}
 
-
-
-	cout << "Edit Sucessful" << endl;
-	system("pause");
-	system("CLS");
 	return;
+}
+
+// Admin 1.14
+string checkCustomerId(string IcPassport)
+{
+	int exist = 0;
+	string customerId;
+
+	customerCurrent = customerHead;
+	while (customerCurrent != NULL)
+	{
+		if (customerCurrent->CustomerIcOrPassport == IcPassport)
+		{
+			customerId = customerCurrent->CustomerId;
+			exist = 1;
+		}
+		customerCurrent = customerCurrent->nextAdd;
+	}
+
+	if (exist == 1)
+	{
+		return customerId;
+	}
+	else
+	{
+		return "";
+	}
+
 }
 
 
 
 
 
+//----------------------------------------------------
+//--------------------   Main  -----------------------
+//----------------------------------------------------
 
 int main()
 {
@@ -2411,10 +2703,11 @@ int main()
 
 		int decision;
 		system("CLS");
-		cout << "1) Login to existing account" << endl;
-		cout << "2) Create a new account as passenger" << endl;
-		cout << "3) Exit system" << endl;
-		cout << "Select your decision: ";
+		drawopening();
+		cout << "1) Login To Existing Account" << endl;
+		cout << "2) Create A New Account As Passenger" << endl;
+		cout << "3) Exit System" << endl;
+		cout << "Select Your Decision: ";
 		cin >> decision;
 
 		if (decision == 1)
@@ -2426,7 +2719,7 @@ int main()
 				cout << "1) Passenger" << endl;
 				cout << "2) Admin" << endl;
 				cout << "3) Return to Main Menu" << endl;
-				cout << "Select your role: ";
+				cout << "Select Your Role: ";
 				cin >> role;
 
 				// Passenger
@@ -2435,9 +2728,9 @@ int main()
 					system("CLS");
 					string customerAccount;
 					string customerPassword;
-					cout << "Please Enter your IC or Passport Number: ";
+					cout << "Please Enter Your IC or Passport Number: ";
 					cin >> customerAccount;
-					cout << "Please Enter your Password: ";
+					cout << "Please Enter Your Password: ";
 					cin >> customerPassword;
 
 					string customerId = checkCustomerLoggingAccount(customerAccount, customerPassword);
@@ -2448,8 +2741,8 @@ int main()
 						while (true)
 						{
 							cout << "1) Purchase Ticket" << endl;
-							cout << "2) Search subway station details" << endl;
-							cout << "3) View and delete transaction history" << endl;
+							cout << "2) Search Subway Station Details" << endl;
+							cout << "3) View and Delete Transaction History" << endl;
 							cout << "4) Exit to Main Menu" << endl;
 							cin >> customerDecision;
 							if (customerDecision == 1)
@@ -2458,17 +2751,31 @@ int main()
 							}
 							else if (customerDecision == 2)
 							{
-								printStationDetails();
+								while (true)
+								{
+									int decision = printStationDetails();
+									if (decision == 0)
+									{
+										break;
+									}
+								}
 							}
 							else if (customerDecision == 3)
 							{
 								printAndDeleteTransactionHistory(customerId);
 							}
-							else
+							else if (customerDecision == 4)
 							{
-								cout << "Thank you, have a nice day. " << endl;
+								cout << "Thank You, Have A Nice Day! " << endl;
 								system("pause");
 								break;
+							}
+							else
+							{
+								cin.clear();										 // remove the input operation
+								cin.ignore(numeric_limits<streamsize>::max(), '\n'); // remove content
+								cout << "----- Incorrect Input -----" << endl;
+								system("pause");
 							}
 						}
 					}
@@ -2476,69 +2783,97 @@ int main()
 					break;
 				}
 
-				/*
+
 				// Admin
 				else if (role == 2)
 				{
 					string adminAccount;
 					string adminPassword;
-					cout << "Please Enter username" << endl;
+					cout << "Please Enter Username" << endl;
 					cin >> adminAccount;
-					cout << "Please Enter password" << endl;
+					cout << "Please Enter Password" << endl;
 					cin >> adminPassword;
 
 					if (adminAccount == "admin" && adminPassword == "12345")
 					{
 						int decision;
-						bool loop = true;
-						while (loop)
+						while (true)
 						{
-							cout << "1) Add new subway information" << endl;
-							cout << "2) Edit current subway stations' information" << endl;
-							cout << "3) View all purchase transactions" << endl;
-							cout << "4) Sort purchase transaction based on passenger name" << endl;
-							cout << "5) Search specific customer ticket purchase information" << endl;
-							cout << "6) Edit specific customer ticket purchase information" << endl;
-							cout << "7) Delete specific customer ticket purchase information" << endl;
+							cout << "1) Add New Subway Information" << endl;
+							cout << "2) Edit Current Subway Station Information" << endl;
+							cout << "3) View All Purchase Transactions" << endl;
+							cout << "4) Sort Purchase Transaction Based On Passenger Name" << endl;
+							cout << "5) Search Specific Customer Ticket Purchase Information" << endl;
+							cout << "6) Edit Specific Customer Ticket Purchase Information" << endl;
+							cout << "7) Delete Specific Customer Ticket Purchase Information" << endl;
 							cout << "8) Exit to Main Menu" << endl;
-							cout << "Please enter your option: ";
+							cout << "Please Enter Your Option: ";
 							cin >> decision;
-							switch (decision)
+
+							if (decision == 1)
 							{
-							case 1:
-								addNewSubwayStationInformation();
-								break;
-							case 2:
-								editCurrentSubwayStationsInformation();
-								break;
-							case 3:
-								viewAllPurchaseTransactions();
-								break;
-							case 4:
-								sortPurchaseTransaction();
-								break;
-							case 5:
-								searchPurchaseCustomerTicketPurchaseInformation();
-								break;
-							case 6:
+								//addNewSubwayStationInformation();
+							}
+							else if (decision == 2)
+							{
+								//editCurrentSubwayStationsInformation();
+							}
+							else if (decision == 3)
+							{
+								//viewAllPurchaseTransactions();
+							}
+							else if (decision == 4)
+							{
+								//sortPurchaseTransaction();
+							}
+							else if (decision == 5)
+							{
+								//searchPurchaseCustomerTicketPurchaseInformation();
+							}
+							else if (decision == 6)
+							{
 								editCustomerTicket();
+							}
+							else if (decision == 7)
+							{
+								string IcPassport;
+								cout << "Input Customer Ic Or Passport: " << endl;
+								cin >> IcPassport;
+								string customerid = checkCustomerId(IcPassport);
+
+								if (customerid == "")
+								{
+									cout << "This IC or Passport does not exist in this system" << endl;
+								}
+								else
+								{
+									printAndDeleteTransactionHistory(customerid);
+								}
+							}
+							else if (decision == 8)
+							{
+								cout << "Thank You, Have A Nice Day! " << endl;
+								system("pause");
 								break;
-							case 7:
-								int customerId;
-								cout << "Input Customer Id: " << endl;
-								cin >> customerId;
-								deletePurchaseTransaction(customerId);
-								break;
-							case 8:
-								loop = false;
-								break;
-							default:
-								cout << "Invalid input" << endl;
+							}
+							else
+							{
+								cin.clear();										 // remove the input operation
+								cin.ignore(numeric_limits<streamsize>::max(), '\n'); // remove content
+								cout << "----- Incorrect Input -----" << endl;
+								system("pause");
 							}
 						}
+						break;
+					}
+					else
+					{
+						cout << "----- Incorrect Username Or Password -----" << endl;
+						system("pause");
+						break;
 					}
 				}
-				*/
+
 				else if (role == 3)
 				{
 					break;
@@ -2547,7 +2882,7 @@ int main()
 				{
 					cin.clear();										 // remove the input operation
 					cin.ignore(numeric_limits<streamsize>::max(), '\n'); // remove content
-					cout << "Invalid Format" << endl;
+					cout << "----- Invalid Format -----" << endl;
 					system("pause");
 				}
 			}
@@ -2560,11 +2895,11 @@ int main()
 				string customerName;
 				string customerIcOrPassport;
 				string customerPassword;
-				cout << "Please Enter your Full Name: ";
+				cout << "Please Enter Your Full Name: ";
 				cin >> customerName;
-				cout << "Please Enter your IC or Passport Number: ";
+				cout << "Please Enter Your IC or Passport Number: ";
 				cin >> customerIcOrPassport;
-				cout << "Please Create a password: ";
+				cout << "Please Create A Password: ";
 				cin >> customerPassword;
 
 				int status = createCustomerAccount(customerName, customerIcOrPassport, customerPassword);
@@ -2572,8 +2907,8 @@ int main()
 				{
 
 					string ContinueCreate;
-					cout << "This account is already existed. " << endl;
-					cout << "Continue Create account? " << endl;
+					cout << "----- This Account Is Already Existed -----" << endl;
+					cout << "Continue Create Account? " << endl;
 					cout << "1) Yes    2) No";
 					cin >> ContinueCreate;
 
@@ -2587,13 +2922,13 @@ int main()
 					}
 					else
 					{
-						cout << "Invalid Input. Returning to Main Menu." << endl;
+						cout << "----- Invalid Input. Returning to Main Menu -----" << endl;
 						system("pause");
 					}
 				}
 				else
 				{
-					cout << "Account created successfully." << endl;
+					cout << "----- Account Created Successfully -----" << endl;
 					system("pause");
 					break;
 				}
@@ -2607,12 +2942,12 @@ int main()
 		{
 			cin.clear();										 // remove the input operation
 			cin.ignore(numeric_limits<streamsize>::max(), '\n'); // remove content
-			cout << "Invalid Format" << endl;
+			cout << "----- Invalid Format -----" << endl;
 			system("pause");
 		}
 	}
 
-	cout << "Bye";
+	cout << "Bye!";
 
 	return 0;
 }
